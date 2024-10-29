@@ -253,46 +253,6 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
           ) : (
             <p className="flex justify-center py-10">{error}</p>
           )}
-          {filteredMemos.length > 0 ? (
-            filteredMemos.map((memo) => (
-              <a
-                href={`./message/${memo.id}`}
-                key={memo.id}
-                onClick={(e) => {}}
-              >
-                <div className="grid grid-cols-4 py-5 px-8 overflow-y-scroll scrollbar-hidden">
-                  <div className="col-span-2 grid grid-cols-7 items-center">
-                    <input
-                      type="checkbox"
-                      className="col-span-1 w-5 h-5 mr-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none"
-                      checked={selectedMemos.includes(memo.id)}
-                      onChange={() => handleCheckboxChange(memo.id)}
-                    />
-                    {/* {console.log(memo.starred)} */}
-                    <img
-                      src={starred || memo.starred ? Star2 : Star}
-                      className="w-4 h-4 col-sapn-1"
-                      onClick={(e) => {
-                        handleStar(memo.id), e.stopPropagation();
-                        e.preventDefault();
-                      }}
-                    />
-                    <p className="col-span-5 message-text line-clamp-2">
-                      {memo.sender_position}
-                    </p>
-                  </div>
-                  <p className="ml-5 message-text line-clamp-2">
-                    {memo.memo_subject}
-                  </p>
-                  <p className="ml-5 message-text text-right">
-                    {formatDate(memo.date_sent)}
-                  </p>
-                </div>
-              </a>
-            ))
-          ) : (
-            <p className="flex justify-center py-10">{error}</p>
-          )}
         </div>
       )}
       <hr className=" border-t-1 mb-10 border-[#00000030]" />
