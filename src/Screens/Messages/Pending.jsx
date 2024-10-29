@@ -11,7 +11,10 @@ const Pending = () => {
     <div className=" ">
       <div className="flex justify-between items-center py-8 px-8 ">
         <div className="inline-flex items-center">
-          <input type="checkbox" className="w-5 h-5 bg-primary" />
+          <input
+            type="checkbox"
+            className="w-5 h-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none "
+          />
           <img src={Reload} className="w-6 h-6 ml-5" />
           <img src={MenuH} className="w-6 h-6 ml-5" />
         </div>
@@ -28,7 +31,10 @@ const Pending = () => {
       <hr className=" border-t-1 border-[#00000030]" />
       <div className="grid grid-cols-3 py-5 px-8 ">
         <div className="inline-flex items-center">
-          <input type="checkbox" className="w-5 h-5 bg-primary" />
+          <input
+            type="checkbox"
+            className="w-5 h-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none "
+          />
           <p className="ml-5 message-head">Sender</p>
         </div>
         <p className="ml-5 message-head text-left">Subject</p>
@@ -39,7 +45,10 @@ const Pending = () => {
       <a href="./message">
         <div className="grid grid-cols-3 py-5 px-8 ">
           <div className="inline-flex items-center">
-            <input type="checkbox" className="w-5 h-5 bg-primary" />
+            <input
+              type="checkbox"
+              className="w-5 h-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none "
+            />
             <p className="ml-5 message-text">David Chad</p>
           </div>
           <p className="ml-5 message-text text-left">Pending</p>
@@ -50,7 +59,10 @@ const Pending = () => {
       <a href="./message">
         <div className="grid grid-cols-3 py-5 px-8 ">
           <div className="inline-flex items-center">
-            <input type="checkbox" className="w-5 h-5 bg-primary" />
+            <input
+              type="checkbox"
+              className="w-5 h-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none "
+            />
             <p className="ml-5 message-text">David Chad</p>
           </div>
           <p className="ml-5 message-text text-left">This is a text</p>
@@ -60,7 +72,10 @@ const Pending = () => {
       <a href="./message">
         <div className="grid grid-cols-3 py-5 px-8 ">
           <div className="inline-flex items-center">
-            <input type="checkbox" className="w-5 h-5 bg-primary" />
+            <input
+              type="checkbox"
+              className="w-5 h-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none "
+            />
             <p className="ml-5 message-text">David Chad</p>
           </div>
           <p className="ml-5 message-text text-left">This is a text</p>

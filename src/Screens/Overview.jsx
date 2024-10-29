@@ -9,6 +9,18 @@ import AllStar from "../Lib/Starred";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import auth from "../Utils/auth";
+import WaterMark from "../Components/WaterMark";
+import allSent from "../Lib/Sent";
+import statistics from "../Lib/Statistics";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 const Overview = () => {
   auth();
@@ -17,7 +29,9 @@ const Overview = () => {
   const [drafts, setDrafts] = useState(0);
   const [archived, setArchived] = useState(0);
   const [starred, setStarred] = useState(0);
+  const [sent, setSent] = useState(0);
   const [memos, setMemos] = useState([]);
+  const [stat, setStat] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -43,50 +57,83 @@ const Overview = () => {
       setArchived(fetchedArchived.length);
       const fetchedStarred = await AllStar();
       setStarred(fetchedStarred.length);
+      const fetchedSent = await allSent();
+      setSent(fetchedSent.length);
+      const stats = await statistics();
+      setStat(stats);
+      // console.log(stats);
     };
 
     fetchAll();
   }, []);
 
+  // console.log(stat);
+
   return (
-    <div className="grid grid-cols-12 bgscreen">
-      <SideBar />
-      <div className="col-span-9 bg-[url('../assets/svg/bg.svg')] p-10">
+    <div className="lg:grid lg:grid-cols-12 relative">
+      <SideBar className="hidden" />
+      <div className="col-span-9 bg-[url('../assets/svg/bg.svg')] lg:p-10 p-5 overflow-hidden relative">
+        <WaterMark />
         <div className="flex justify-between">
           <p className="page-head">Overview</p>
         </div>
-        <div className="grid grid-cols-3 mt-7 gap-x-0.5 gap-y-5">
-          <div className="pl-16 py-8 bg-secondary py-[35px] rounded-[10px] inline-flex items-center w-full text-white">
+        <div className="grid lg:grid-cols-3 grid-cols-2 mt-7 gap-x-2 gap-y-5">
+          <div className=" py-8 bg-secondary py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-white">
             <p className="font-bold text-[32px]">4</p>
-            <p className="font-light text-base ml-4">Approved</p>
+            <p className="font-light text-base lg:ml-4">Approved</p>
           </div>
-          <div className="pl-16 py-8 bg-[#FF9400] py-[35px] rounded-[10px] inline-flex items-center w-full text-white">
-            <p className="font-bold text-[32px]">16</p>
-            <p className="font-light text-base ml-4">Pending</p>
+          <div className=" py-8 bg-[#FF9400] py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-white">
+            <p className="font-bold text-[32px]">
+              {stat?.overall_statistics?.total_pending_memos || 0}
+            </p>
+            <p className="font-light text-base lg:ml-4">Pending</p>
           </div>
-          <div className="pl-16 py-8 bg-[#FF331C] py-[35px] rounded-[10px] inline-flex items-center w-full text-white">
+          <div className=" py-8 bg-[#FF331C] py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-white">
             <p className="font-bold text-[32px]">10</p>
-            <p className="font-light text-base ml-4">Rejected</p>
+            <p className="font-light text-base lg:ml-4">Rejected</p>
           </div>
-          <div className="pl-16 py-8 bg-ash py-[35px] rounded-[10px] inline-flex items-center w-full text-black">
-            <p className="font-bold text-[32px]">4</p>
-            <p className="font-light text-base ml-4">Memos Sent</p>
+          <div className=" py-8 bg-ash py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-black">
+            <p className="font-bold text-[32px]">
+              {stat?.overall_statistics?.total_memos_sent || 0}
+            </p>
+            <p className="font-light text-base lg:ml-4">Memos Sent</p>
           </div>
-          <div className="pl-16 py-8 bg-ash py-[35px] rounded-[10px] inline-flex items-center w-full text-black">
-            <p className="font-bold text-[32px]">30</p>
-            <p className="font-light text-base ml-4">Memos Received</p>
+          <div className=" py-8 bg-ash py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-black">
+            <p className="font-bold text-[32px]">
+              {" "}
+              {stat?.overall_statistics?.total_memos_received || 0}
+            </p>
+            <p className="font-light text-base lg:ml-4">Memos Received</p>
           </div>
-          <div className="pl-16 py-8 bg-ash py-[35px] rounded-[10px] inline-flex items-center w-full text-black">
+          <div className=" py-8 bg-ash py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-black">
             <p className="font-bold text-[32px]">50</p>
-            <p className="font-light text-base ml-4">Memos Created</p>
+            <p className="font-light text-base lg:ml-4">Memos Created</p>
           </div>
         </div>
-        <div className="grid grid-cols-12 gap-6 mt-[52px] ">
+        <div className="bg-primary p-8 rounded-[10px] mt-10 pb-28 h-[400px]">
+          <p className="font-bold text-[32px]">Memo Analytics</p>
+          <ResponsiveContainer className="w-full mt-10">
+            <BarChart data={stat.monthly_statistics} type="monotone">
+              {/* {console.log(stat.monthly_statistics)} */}
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="total_memos_sent" fill="#023D00" />
+              <Bar dataKey="total_drafts" fill="#FF9400" />
+              <Bar dataKey="total_memos_received" fill="#025C00" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="lg:grid grid-cols-12 gap-6 mt-[52px] ">
           <div className="col-span-3 space-y-5">
-            <div className="bg-secondary rounded py-[14px] px-4 inline-flex items-center w-full">
-              <img src={Email} className="w-5 h-5" />
-              <p className="text-white ml-2 text-xl font-normal">Compose</p>
-            </div>
+            <a href="./compose">
+              {" "}
+              <div className="bg-secondary rounded py-[14px] px-4 inline-flex items-center w-full">
+                <img src={Email} className="w-5 h-5" />
+                <p className="text-white ml-2 text-xl font-normal">Compose</p>
+              </div>
+            </a>
+
             <button
               className="bg-[#f6f6f6] rounded-lg py-[14px] px-4 flex justify-between items-center w-full ring-1 ring-[#595959]"
               onClick={() => handleItemClick("Inbox")}
@@ -124,7 +171,7 @@ const Overview = () => {
             </button>
             <button
               className="bg-[#f6f6f6] rounded-lg py-[14px] px-4 flex justify-between items-center w-full ring-1 ring-[#595959]"
-              onClick={() => handleItemClick("Archive")}
+              onClick={() => handleItemClick("Archived")}
             >
               <p className="ml-2 text-xl font-normal text-black">Archive</p>
               <div className="bg-[#FDAD00] rounded">
@@ -132,34 +179,48 @@ const Overview = () => {
               </div>
             </button>
           </div>
-          <div className="col-span-4 ring-1 ring-[#595959] bg-primary rounded-[10px] px-6 py-11">
+          <div className="col-span-4 ring-1 ring-tertiary bg-primary rounded-[10px] px-6 py-11 lg:mt-0 mt-5">
             <div className="flex justify-between">
               <p className="font-bold text-base">Recent Memos</p>
               <button
-                onClick={() => handleItemClick("Archive")}
+                onClick={() => handleItemClick("Inbox")}
                 className="text-base font-normal opacity-50"
               >
                 See all
               </button>
             </div>
             <div className="pt-7 space-y-3">
-              {loading ? (
-                <div className="bg-white py-2 px-4 w-full ring-1 ring-[#00000030] rounded-[10px]">
-                  <Skeleton className="h-5 w-20" />
-                  <Skeleton className="h-5 w-40" />
+              {loading || memos.length < 1 ? (
+                <div className="space-y-2">
+                  <div className="bg-white py-2 px-4 w-full ring-1 ring-[#00000030] rounded-[10px]">
+                    <Skeleton className="h-5 w-20" />
+                    <Skeleton className="h-5 w-40" />
+                  </div>
+                  <div className="bg-white py-2 px-4 w-full ring-1 ring-[#00000030] rounded-[10px]">
+                    <Skeleton className="h-5 w-20" />
+                    <Skeleton className="h-5 w-40" />
+                  </div>
+                  <div className="bg-white py-2 px-4 w-full ring-1 ring-[#00000030] rounded-[10px]">
+                    <Skeleton className="h-5 w-20" />
+                    <Skeleton className="h-5 w-40" />
+                  </div>
+                  <div className="bg-white py-2 px-4 w-full ring-1 ring-[#00000030] rounded-[10px]">
+                    <Skeleton className="h-5 w-20" />
+                    <Skeleton className="h-5 w-40" />
+                  </div>
                 </div>
               ) : (
                 <></>
               )}
               {memos.length > 0 ? (
-                memos.map((memo) => (
+                memos.slice(-4).map((memo) => (
                   <a href={`./message/${memo.id}`} key={memo.id}>
-                    <div className="bg-white py-2 px-4 w-full ring-1 ring-[#00000030] rounded-[10px]">
+                    <div className="bg-white py-2 px-4 w-full ring-1 ring-[#00000030] rounded-[10px] mb-2">
                       <p className="font-medium text-[15px]">
                         {memo.memo_subject}
                       </p>
-                      <p className="font-light text-[14px] text-[#595959] mb-3">
-                        Name - {memo.sender_position}
+                      <p className="font-light text-[14px] text-[#595959]">
+                        From - {memo.sender_position}
                       </p>
                     </div>
                   </a>
@@ -171,11 +232,11 @@ const Overview = () => {
               )}
             </div>
           </div>
-          <div className="col-span-5 ring-1 ring-[#595959] bg-primary rounded-[10px] pl-7 pr-12 py-7">
+          <div className="col-span-5 ring-1 ring-tertiary bg-primary rounded-[10px] pl-7 pr-12 py-7 lg:mt-0 mt-5">
             <p className="font-medium text-sm">Notification</p>
             <div className="pt-4 space-y-6">
               <div>
-                <hr className="border-t-1 border-[#595959]" />
+                <hr className="border-t-1 border-tertiary" />
                 <p className="text-sm font-light pt-2">
                   Lorem ipsum dolor sit amet consectetur. At risus nunc mauris
                   in aliquam mauris. Faucibus amet cursus leo
@@ -183,7 +244,7 @@ const Overview = () => {
                 <p className="text-gray-500 text-xs mt-2">12th June, 2023</p>
               </div>
               <div>
-                <hr className="border-t-1 border-[#595959]" />
+                <hr className="border-t-1 border-tertiary" />
                 <p className="text-sm font-light pt-2">
                   Lorem ipsum dolor sit amet consectetur. At risus nunc mauris
                   in aliquam mauris. Faucibus amet cursus leo
@@ -191,7 +252,7 @@ const Overview = () => {
                 <p className="text-gray-500 text-xs mt-2">12th June, 2023</p>
               </div>
               <div>
-                <hr className="border-t-1 border-[#595959]" />
+                <hr className="border-t-1 border-tertiary" />
                 <p className="text-sm font-light pt-2">
                   Lorem ipsum dolor sit amet consectetur. At risus nunc mauris
                   in aliquam mauris. Faucibus amet cursus leo

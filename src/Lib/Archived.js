@@ -24,7 +24,7 @@ const AllArchived = async () => {
       if ("Request failed with status code 401" === err.message) {
         window.location.href = "/sign-in";
       }
-      console.log(err);
+      // console.log(err);
     }
   } else {
     return "Please Login";

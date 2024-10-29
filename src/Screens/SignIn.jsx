@@ -26,7 +26,7 @@ const SignIn = () => {
         email: email,
         password: password,
       });
-      console.log(response.status);
+      // console.log(response.status);
       if (response.status === 200) {
         const { token, user } = response.data;
 
@@ -39,81 +39,117 @@ const SignIn = () => {
         setError(response.message);
       }
     } catch (err) {
+      const errorMessage = err.response.data.message;
+      if (errorMessage.includes("Validation error")) {
+        setError("Wrong Email or Password");
+      } else {
+        setError("Network. Please try again.");
+      }
       setLoading(false);
-      setError("Wrong Email or Password");
+      // setError("");
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleLogin();
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="grid grid-cols-2 gap-20 px-28">
-        <div>
-          <div className="">
-            <div className="flex justify-center">
-              <img src={Logo} className="h-10 " />
-            </div>
-            <p className="text-base font-light text-center pt-4">
+    <div className="min-h-screen w-full flex items-center justify-center">
+      <div className="lg:grid lg:grid-cols-2 gap-20 w-full  px-10 lg:px-28">
+        {/* Left Column: Logo and Info */}
+        <div className="lg:block hidden">
+          <div className="text-center ">
+            <img
+              src={Logo}
+              className="h-10 flex justify-center m-auto"
+              alt="Logo"
+            />
+            <p className="text-base font-light mt-4">
               Lorem ipsum dolor sit amet consectetur. Aliquam enim id leo a.
               Etiam congue mauris pellentesque quam.
             </p>
           </div>
-          <img src={Login} />
+          <img src={Login} alt="Login Illustration" className="mt-10" />
         </div>
-        <div className="pr-10 mt-10">
-          <p className="text-xl font-normal">Hi Cephas, welcome</p>
-          <p className="mt-4 font-bold text-5xl">Sign In </p>
-          <div className="pt-7">
+
+        {/* Right Column: Login Form */}
+        <div className="lg:pr-10 mt-10 flex flex-col justify-center w-full">
+          {/* Mobile Logo */}
+          <div className="flex justify-center lg:hidden mb-10">
+            <img src={Logo} className="h-10" alt="Logo" />
+          </div>
+
+          <p className="text-xl font-normal">Hi, welcome back!</p>
+          <p className="mt-4 font-bold text-5xl">Sign In</p>
+
+          <div className="pt-7 ">
+            {/* Email Input */}
             <div>
               <label
-                htmlFor="price"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-900"
               >
                 Email
               </label>
-              <div className="relative mt-2 ">
+              <div className="relative mt-2">
                 <input
                   type="email"
+                  id="email"
                   onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder="Enter your email"
-                  className="block w-full rounded-2xl border-0 p-7 text-gray-900 ring-2 ring-inset ring-tertiary placeholder:text-grey focus:ring-0 focus:ring-0 focus:ring-secondary"
+                  className="block w-full rounded-2xl border-0 lg:p-7 p-4 text-gray-900 ring-2 ring-tertiary placeholder:text-grey focus:ring-0 lg:pr-20 pr-10"
+                  aria-label="Email"
                 />
-                <div className="absolute inset-y-0 right-0 mt-6 flex items-center">
-                  <div className="h-full rounded-md border-1 border-secondary py-0 pl-2 pr-7 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
-                    <img src={Email} />
-                  </div>
+                <div className="absolute inset-y-0 right-0 flex items-center lg:pr-7 pr-3">
+                  <img src={Email} alt="Email Icon" className="" />
                 </div>
               </div>
             </div>
-            <div className="mt-[71px]">
+
+            {/* Password Input */}
+            <div className="mt-12">
               <label
-                htmlFor="price"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-900"
               >
                 Password
               </label>
-              <div className="relative mt-2 ">
+              <div className="relative mt-2">
                 <input
                   type="password"
+                  id="password"
                   onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder="6+ Characters, 1 capital letter"
-                  className="block w-full rounded-2xl border-0 p-7 text-gray-900 ring-2 ring-inset ring-tertiary placeholder:text-grey focus:ring-0 focus:ring-0 focus:ring-secondary"
+                  className="block w-full rounded-2xl border-0 lg:p-7 p-4 text-gray-900 ring-2 ring-tertiary placeholder:text-grey focus:ring-0 lg:pr-20 pr-10"
+                  aria-label="Password"
                 />
-                <div className="absolute inset-y-0 right-0 mt-6 flex items-center">
-                  <div className="h-full rounded-md border-1 border-secondary py-0 pl-2 pr-7 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
-                    <img src={Password} />
-                  </div>
+                <div className="absolute inset-y-0 right-0 flex items-center lg:pr-7 pr-0">
+                  <img src={Password} alt="Password Icon" />
                 </div>
               </div>
-              {error && <p className="text-red-500 mt-5 -mb-5">{error}</p>}
+              {error && <p className="text-red-500 mt-5">{error}</p>}
             </div>
-            <div className="mt-[71px]">
+
+            {/* Submit Button */}
+            <div className="mt-12">
               <button
                 onClick={handleLogin}
-                className="text-center justify-center flex items-center w-full bg-secondary p-7 rounded-2xl text-white hover:bg-white hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110"
+                className="w-full flex justify-center items-center bg-secondary lg:p-7 p-4 rounded-2xl text-white hover:bg-white hover:ring-2 hover:ring-btn hover:text-btn transition-transform duration-200 ease-in-out"
+                aria-label="Log In"
               >
                 {loading ? <div className="loader"></div> : "Log In"}
               </button>
             </div>
+            <a href="/forgot-password">
+              <p className="font-semibold text-center mt-5 text-secondary">
+                Forgot Password ?
+              </p>
+            </a>
           </div>
         </div>
       </div>

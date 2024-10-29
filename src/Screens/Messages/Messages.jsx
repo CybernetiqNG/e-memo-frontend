@@ -6,6 +6,7 @@ import ApprovedIcon from "../../assets/svg/icons/approved.svg";
 import ArchiveIcon from "../../assets/svg/icons/archive2.svg";
 import DraftIcon from "../../assets/svg/icons/draft.svg";
 import InboxIcon from "../../assets/svg/icons/Inbox.svg";
+import SentIcon from "../../assets/svg/icons/sent.svg";
 import FavouriteIcon from "../../assets/svg/icons/favourite.svg";
 import PendingIcon from "../../assets/svg/icons/pending.svg";
 import RejectedIcon from "../../assets/svg/icons/rejected.svg";
@@ -20,6 +21,7 @@ import Favourite from "./Favourite";
 import Archived from "./Archived";
 import Sent from "./Sent";
 import auth from "../../Utils/auth";
+import WaterMark from "../../Components/WaterMark";
 
 const Messages = () => {
   auth();
@@ -34,11 +36,11 @@ const Messages = () => {
 
   const items = [
     { id: "Inbox", icon: InboxIcon, label: "Inbox" },
-    { id: "Sent", icon: InboxIcon, label: "Sent" },
+    { id: "Sent", icon: SentIcon, label: "Sent" },
     { id: "Draft", icon: DraftIcon, label: "Draft" },
     { id: "Approved", icon: ApprovedIcon, label: "Approved" },
-    { id: "Rejected", icon: RejectedIcon, label: "Rejected" },
-    { id: "Pending", icon: PendingIcon, label: "Pending" },
+    // { id: "Rejected", icon: RejectedIcon, label: "Rejected" },
+    // { id: "Pending", icon: PendingIcon, label: "Pending" },
     { id: "Favourite", icon: FavouriteIcon, label: "Favourite" },
     { id: "Archived", icon: ArchiveIcon, label: "Archived" },
   ];
@@ -67,17 +69,20 @@ const Messages = () => {
   };
 
   return (
-    <div className="grid grid-cols-12 bgscreen">
+    <div className="lg:grid grid-cols-12 ">
       <SideBar />
-      <div className="col-span-9 bg-[url('../assets/svg/bg.svg')] p-10">
-        <div className="flex justify-between">
+      <div className="col-span-9 bg-[url('../assets/svg/bg.svg')] lg:p-10 p-5 overflow-hidden relative">
+        <WaterMark />
+        <div className="flex lg:flex-row flex-col justify-between">
           <p className="page-head">Messages</p>
           <p className="go-back">
             Dashboard / <span className="text-secondary">{activeItem}</span>
           </p>
         </div>
 
-        <div className="bg-primary shadow-custom-shadow rounded-lg mt-10 grid grid-cols-7">
+        <div className="bg-primary shadow-custom-shadow rounded-lg mt-10 grid grid-cols-7 relative overflow-hidden">
+          <WaterMark />
+
           <div className="col-span-2 border-r-[1px] p-5 pb-16 border-[#000000]">
             <div className="bg-secondary rounded py-3 px-4 inline-flex items-center">
               <img src={EmailIcon} className="w-5 h-5" alt="Compose icon" />
