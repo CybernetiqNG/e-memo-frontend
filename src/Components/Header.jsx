@@ -72,7 +72,7 @@ const Header = () => {
             <div className=" items-center gap-x-1 lg:block hidden">
               <div className="relative ">
                 <div
-                  className="bg-white inline-flex items-center rounded-md py-2 px-6 h-[53px] cursor-pointer"
+                  className="bg-white inline-flex items-center rounded-md py-2 px-6 h-[53px] cursor-pointer "
                   onClick={() => {
                     setIsOpen(!isOpen);
                   }}
@@ -91,7 +91,9 @@ const Header = () => {
                     />
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-semibold">{user.name}</p>
+                    <p className="text-sm font-semibold max-w-[200px] truncate">
+                      {user.name}
+                    </p>
                     <p className="font-light text-[7px]">
                       {user.position_name}
                     </p>
@@ -107,16 +109,23 @@ const Header = () => {
 
                 {isOpen && (
                   <div
-                    onClick={() => {
-                      LogoutNow();
-                    }}
+                    className="absolute flex-col w-full space-y-1"
+                    style={{ top: "110%", zIndex: "10" }}
                   >
+                    <a
+                      className="flex justify-between items-center left-0 bg-white ring-1 ring-secondary text-center py-2 px-6 rounded-md text-black cursor-pointer h-[53px] w-full "
+                      href="./profile"
+                    >
+                      <p className="">Profile</p>
+                    </a>
                     <button
-                      className="absolute flex justify-between items-center left-0 bg-white ring-1 ring-secondary text-center py-2 px-6 rounded-md text-black cursor-pointer h-[53px] w-full z-30"
-                      style={{ top: "120%" }}
+                      className="flex justify-between items-center left-0 bg-white ring-1 ring-secondary text-center py-2 px-6 rounded-md text-black cursor-pointer h-[53px] w-full "
+                      onClick={() => {
+                        LogoutNow();
+                      }}
                     >
                       <p className="">Log Out</p>
-                      <FaAngleDown className="ml-4" />
+                      {/* <FaAngleDown className="ml-4" /> */}
                     </button>
                   </div>
                 )}

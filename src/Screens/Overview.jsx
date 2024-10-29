@@ -110,9 +110,9 @@ const Overview = () => {
             <p className="font-light text-base lg:ml-4">Memos Created</p>
           </div>
         </div>
-        <div className="bg-primary p-8 rounded-[10px] mt-10 pb-28 h-[400px]">
-          <p className="font-bold text-[32px]">Memo Analytics</p>
-          <ResponsiveContainer className="w-full mt-10">
+        <div className="bg-primary py-8 rounded-[10px] mt-10 pb-28 h-[400px]">
+          <p className="font-bold text-[32px] px-8">Memo Analytics</p>
+          <ResponsiveContainer className="w-full mt-10 pr-5">
             <BarChart data={stat.monthly_statistics} type="monotone">
               {/* {console.log(stat.monthly_statistics)} */}
               <XAxis dataKey="name" />
