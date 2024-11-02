@@ -7,7 +7,7 @@ const WaterMark = () => {
         .fill(`${user?.name} `)
         .map((text, index) => (
           <p key={index} className="block text-clip overflow-hidden">
-            {text.repeat(10)}
+            {text.repeat(20)}
           </p>
         ))}
     </div>

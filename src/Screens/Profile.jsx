@@ -15,6 +15,7 @@ const Profile = () => {
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem("user")) || {}
   );
+  const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("token");
   const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -24,6 +25,7 @@ const Profile = () => {
     if (file) {
       setSelectedFile(file);
       uploadProfilePicture(file);
+      setLoading(true);
     }
   };
 
@@ -54,6 +56,7 @@ const Profile = () => {
 
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
+      setLoading(false);
     } catch (error) {
       console.error("Error updating profile picture:", error);
     }
@@ -94,6 +97,14 @@ const Profile = () => {
                 alt="Profile"
                 className="absolute m-auto lg:w-[256px] rounded-full w-32 p-[5px] h-auto object-contain"
               />
+              {loading ? (
+                <div className="m-auto absolute">
+                  <div className="loader-two "></div>
+                </div>
+              ) : (
+                <></>
+              )}
+
               <div
                 className="bg-secondary absolute p-2 rounded-full right-1/2 bottom-1/2 lg:translate-x-32 translate-x-20 translate-y-1/2 cursor-pointer"
                 onClick={triggerFileInput}

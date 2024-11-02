@@ -21,6 +21,7 @@ const Logout = async () => {
 
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+        localStorage.removeItem("chatdata");
 
         window.location.href = "/sign-in";
       } else {

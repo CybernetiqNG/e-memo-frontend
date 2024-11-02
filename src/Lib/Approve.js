@@ -20,9 +20,10 @@ const Approve = async (approve, id) => {
       );
 
       if (response.status === 200) {
-        console.log(response);
-        // const data = response.data.starred_memos;
-        // return data;
+        // console.log(response);
+        const data = response;
+        // console.log(data);
+        return "dhdfhfdhfhfh";
       } else {
         setError(response.message);
       }
@@ -31,6 +32,7 @@ const Approve = async (approve, id) => {
       //     window.location.href = "/sign-in";
       //   }
       // console.log(err);
+      return err;
     }
   } else {
     return "Please Login";

@@ -77,6 +77,8 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
 
   const handleArchive = async () => {
     setLoading(true);
+    // console.log("======here2======");
+
     pageTitle === "Archived Memos"
       ? await ArchiveMemo("0", selectedMemos)
       : await ArchiveMemo("1", selectedMemos);
@@ -84,6 +86,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
   };
 
   const handleBulkStar = async () => {
+    // console.log("======here1======");
     setLoading(true);
     pageTitle === "Starred Memos"
       ? await StarMemo("0", selectedMemos)
@@ -92,6 +95,8 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
   };
 
   const handleStar = async (id) => {
+    // console.log("======here3======");
+
     starred ? await StarMemo("0", [id]) : await StarMemo("1", [id]);
 
     setReloadKey((prevKey) => prevKey + 1);
@@ -113,7 +118,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
   return (
     <div className="col-span-5 ">
       <div className="flex justify-between items-center py-8 px-8 ">
-        <div className="inline-flex items-center">
+        <div className="grid grid-cols-5 flex justify-center items-center w-full">
           <input
             type="checkbox"
             className="w-5 h-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none"
@@ -122,13 +127,15 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
             indeterminate={
               selectedMemos.length > 0 && selectedMemos.length < memos.length
             }
+            title="Select all"
           />
           <img
             src={Reload}
-            className="w-6 h-6 ml-5 cursor-pointer"
+            className="w-6 h-6  cursor-pointer"
             onClick={() => {
               handleReload();
             }}
+            title="Refresh"
           />
           {options ? (
             <>
@@ -136,7 +143,8 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
                 onClick={() => {
                   visibility();
                 }}
-                className="w-6 h-6 ml-5"
+                className="w-6 h-6 cursor-pointer"
+                title="Expand"
               />
 
               <div
@@ -145,12 +153,13 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
                     handleArchive();
                   }
                 }}
-                className="w-6 h-6"
+                className="w-6 h-6 cursor-pointer"
+                title="Archive Memo"
               >
                 {pageTitle === "Archived Memos" ? (
-                  <MdOutlineUnarchive className="w-6 h-6 ml-5" />
+                  <MdOutlineUnarchive className="w-6 h-6" />
                 ) : (
-                  <img src={Archive} className="w-6 h-6 ml-5" />
+                  <img src={Archive} className="w-6 h-6" />
                 )}
               </div>
 
@@ -160,12 +169,13 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
                     handleBulkStar();
                   }
                 }}
-                className="w-6 h-6"
+                className="w-6 h-6 cursor-pointer"
+                title="Add to favorite"
               >
                 {pageTitle === "Starred Memos" ? (
-                  <img src={Star} className="w-5 h-5 ml-10 mt-0.5" />
+                  <img src={Star} className="w-5 h-5  mt-0.5" />
                 ) : (
-                  <img src={Star2} className="w-5 h-5 ml-10 mt-0.5" />
+                  <img src={Star2} className="w-5 h-5  mt-0.5" />
                 )}
               </div>
             </>
@@ -175,7 +185,8 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
               onClick={() => {
                 visibility();
               }}
-              className="w-6 h-6 ml-5"
+              className="w-6 h-6 cursor-pointer"
+              title="Close"
             />
           )}
         </div>
@@ -187,6 +198,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
             className="w-56 bg-primary text-sm font-normal border-none ring-none outline-none box-shadow-none"
             value={searchQuery}
             onChange={handleSearch}
+            title="Search"
           />
 
           <img src={Tune} className="w-6 h-6 ml-5" />
@@ -199,7 +211,10 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
             type="checkbox"
             className="w-5 h-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none "
           /> */}
-          <p className="ml-24 message-head">Sender</p>
+
+          <p className="ml-24 message-head">
+            {pageTitle === "Sent Memos" ? "Recipient" : "Sender"}
+          </p>
         </div>
         <p className="ml-5 message-head text-left">Subject</p>
 
@@ -238,7 +253,8 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
                       }}
                     />
                     <p className="col-span-5 message-text line-clamp-2">
-                      {memo.sender_position}
+                      {memo.sender_position} |{" "}
+                      {memo.sender_mda_acronym || memo.recipient_mda_acronym}
                     </p>
                   </div>
                   <p className="ml-5 message-text line-clamp-2">

@@ -39,8 +39,8 @@ const Messages = () => {
     { id: "Sent", icon: SentIcon, label: "Sent" },
     { id: "Draft", icon: DraftIcon, label: "Draft" },
     { id: "Approved", icon: ApprovedIcon, label: "Approved" },
-    // { id: "Rejected", icon: RejectedIcon, label: "Rejected" },
-    // { id: "Pending", icon: PendingIcon, label: "Pending" },
+    { id: "Rejected", icon: RejectedIcon, label: "Rejected" },
+    { id: "Pending", icon: PendingIcon, label: "Pending" },
     { id: "Favourite", icon: FavouriteIcon, label: "Favourite" },
     { id: "Archived", icon: ArchiveIcon, label: "Archived" },
   ];

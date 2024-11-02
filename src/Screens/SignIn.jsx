@@ -40,7 +40,11 @@ const SignIn = () => {
       }
     } catch (err) {
       const errorMessage = err.response.data.message;
-      if (errorMessage.includes("Validation error")) {
+
+      if (
+        errorMessage.includes("Validation error") ||
+        errorMessage.includes("Invalid")
+      ) {
         setError("Wrong Email or Password");
       } else {
         setError("Network. Please try again.");

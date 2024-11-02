@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import SideBar from "../../Components/SideBar";
 import Logo from "../../assets/svg/logo2.svg";
 import Back from "../../assets/svg/icons/back.svg";
+import ApproveIcon from "../../assets/svg/approved.svg";
+import DispproveIcon from "../../assets/svg/disapproved.svg";
 import { useParams } from "react-router-dom";
 import singleMemo from "../../Lib/SingleMemo";
 import formatDate from "../../Utils/formatDate";
@@ -28,6 +30,7 @@ const Message = () => {
   const [sending, setSending] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isMinute, setIsMinute] = useState(false);
+  const [minuting, setMinuting] = useState(true);
   const [isBudget, setIsBudget] = useState(false);
   const [isForward, setIsForward] = useState(false);
   const [budgets, setBudgets] = useState([]);
@@ -35,6 +38,10 @@ const Message = () => {
   const [options, setOptions] = useState([]);
   const [recipient, setRecipient] = useState([]);
   const [note, setNote] = useState("");
+  const [isApprove, setIsApprove] = useState(false);
+  const [isConfirm, setIsConfirm] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -214,8 +221,19 @@ const Message = () => {
   };
 
   const approveMemo = async (approve) => {
-    console.log(id);
-    Approve(approve, id);
+    // console.log(id);
+    await Approve(approve, id);
+  };
+
+  const handleConfirm = async () => {
+    setConfirming(true);
+    let choice;
+    isApprove ? (choice = 1) : (choice = -1);
+    const response = await approveMemo(choice);
+    setConfirming(false);
+    setIsConfirm(false);
+    setConfirmed(true);
+    // console.log(response);
   };
 
   return (
@@ -311,15 +329,16 @@ const Message = () => {
             </>
           )}
         </div>
-        <div className="lg:justify-end lg:flex lg:flex-row-reverse lg:gap-3 mt-7 w-full">
+        <div className="lg:justify-items-end lg:flex lg:flex-row-reverse lg:gap-3 mt-7 w-full">
           <div className="flex gap-3 w-full lg:w-96 lg:flex-row">
             <button
-              className="bg-secondary py-4 w-1/2 lg:w-80 text-white rounded-md"
+              className="bg-[#FF0000] py-4 w-1/2 lg:w-80 text-white rounded-md"
               onClick={() => {
-                approveMemo(1);
+                setIsApprove(false);
+                setIsConfirm(true);
               }}
             >
-              Approve
+              Disapprove
             </button>
             <div className="relative lg:w-full w-1/2">
               <button
@@ -341,14 +360,14 @@ const Message = () => {
                 <>
                   {governor ? (
                     <div className="absolute -top-[276px] w-full flex-col gap-3">
-                      <button
+                      {/* <button
                         className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
                         onClick={() => {
                           openMinute(), setIsOpen(!isOpen);
                         }}
                       >
                         Minute
-                      </button>
+                      </button> */}
                       <button
                         className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
                         onClick={() => {
@@ -373,15 +392,15 @@ const Message = () => {
                       </button>
                     </div>
                   ) : (
-                    <div className="absolute -top-[210px] w-full flex-col gap-3">
-                      <button
+                    <div className="absolute -top-[135px] w-full flex-col gap-3">
+                      {/* <button
                         className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
                         onClick={() => {
                           openMinute(), setIsOpen(!isOpen);
                         }}
                       >
                         Minute
-                      </button>
+                      </button> */}
                       <button
                         className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
                         onClick={() => {
@@ -390,7 +409,10 @@ const Message = () => {
                       >
                         Forward
                       </button>
-                      <button className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md">
+                      <button
+                        className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
+                        onClick={handlePrint}
+                      >
                         Print
                       </button>
                     </div>
@@ -401,15 +423,22 @@ const Message = () => {
           </div>
           <div className="flex gap-3 w-full lg:w-auto lg:flex-row mt-3 lg:mt-0">
             <button
-              className="bg-[#FF0000] py-4 w-1/2 lg:w-40 text-white rounded-md"
+              className="bg-secondary py-4 w-1/2 lg:w-40 text-white rounded-md"
               onClick={() => {
-                approveMemo(0);
+                setIsApprove(true);
+                setIsConfirm(true);
               }}
             >
-              Disapprove
+              Approve
             </button>
-            <button className="bg-[#FFC700] py-4 w-1/2 lg:w-40 text-white rounded-md ">
-              Pending
+
+            <button
+              className="bg-[#FFC700] py-4 w-1/2 lg:w-40 text-white rounded-md "
+              onClick={() => {
+                openMinute(), setIsOpen(!isOpen);
+              }}
+            >
+              Minute
             </button>
           </div>
         </div>
@@ -450,30 +479,55 @@ const Message = () => {
                   </h3>
 
                   <div className="inline-flex gap-2 flex w-full justify-center flex items-center">
-                    <div className="grid grid-cols-10 lg:mt-10 mt-5 w-full">
-                      <textarea
-                        className="bg-transparent text-secondary col-span-8 ring-2 ring-secondary rounded-3xl py-3 px-4 mb-3 mr-3 focus:outline-none rows-5 resize-none"
-                        placeholder="Type here..."
-                        onChange={(e) => setComment(e.target.value)}
-                        value={comment}
-                        rows="1"
-                      ></textarea>
-                      <div className="col-span-2 w-full h-12 flex items-center justify-center rounded-3xl">
-                        {sending ? (
-                          <div className="col-span-2 bg-secondary w-full h-12 flex cursor-pointer items-center justify-center rounded-3xl">
-                            <div className="lds-hourglass"></div>
-                          </div>
-                        ) : (
-                          <div className="col-span-2 bg-secondary w-full h-12 flex cursor-pointer items-center justify-center rounded-3xl">
-                            <HiPaperAirplane
-                              className="text-white text-3xl"
-                              onClick={handleCreate}
-                            />
-                          </div>
-                        )}
+                    {minuting ? (
+                      <div className="lg:mt-10 mt-5 w-full items-end">
+                        <div className="bg-transparent ring-2 ring-secondary rounded-3xl py-5 px-5 mr-3 w-full h-40">
+                          <p className="text-left">{comment}</p>
+                        </div>
+
+                        <div className="grid grid-cols-10 gap-5 mt-10 text-[18px]">
+                          <button
+                            className="col-span-4 py-6 w-full text-red-500 rounded-md"
+                            onClick={() => setMinuting(false)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="bg-secondary col-span-6 py-6 w-full text-white rounded-[15.25px]"
+                            onClick={handleCreate}
+                          >
+                            Confirm
+                          </button>
+                        </div>
+                        {note}
                       </div>
-                      {note}
-                    </div>
+                    ) : (
+                      <div className="lg:mt-10 mt-5 w-full items-end">
+                        <textarea
+                          className="bg-transparent ring-2 ring-secondary rounded-3xl py-3 px-4 mr-3 focus:outline-none resize-none w-full"
+                          placeholder="Type here..."
+                          onChange={(e) => setComment(e.target.value)}
+                          value={comment}
+                          rows="5"
+                        ></textarea>
+
+                        <div className="col-span-2 w-full h-12 flex items-center justify-center rounded-3xl">
+                          {sending ? (
+                            <div className="col-span-2 bg-secondary w-full h-12 flex items-center justify-center rounded-lg">
+                              <div className="lds-hourglass"></div>
+                            </div>
+                          ) : (
+                            <div
+                              className="col-span-2 bg-secondary w-full h-12 flex items-center justify-center rounded-3xl cursor-pointer"
+                              onClick={() => setMinuting(true)}
+                            >
+                              <button className="text-white">Send</button>
+                            </div>
+                          )}
+                        </div>
+                        {note}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -681,6 +735,140 @@ const Message = () => {
                       </div>
                     </div>
                     <p>{note}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isConfirm && (
+          <div
+            id="popup-modal"
+            className="flex overflow-y-auto overflow-x-hidden fixed bg-black bg-opacity-50 backdrop-blur-sm top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
+          >
+            <div className="relative p-4 w-full lg:max-w-[500px] max-w-[500px] max-h-full">
+              <div className="relative bg-white rounded-3xl shadow ">
+                <button
+                  onClick={() => setIsConfirm(false)}
+                  className="absolute top-8 end-2.5 text-secondary bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-lg font-bold w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                >
+                  <svg
+                    className="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                  <span className="sr-only">Close modal</span>
+                </button>
+
+                {/* Modal Content */}
+                <div className="py-7  px-7 text-center">
+                  <div className="justify-center flex flex-col">
+                    {isApprove ? (
+                      <img
+                        src={ApproveIcon}
+                        alt="approveIcon"
+                        className="m-auto"
+                      />
+                    ) : (
+                      <img
+                        src={DispproveIcon}
+                        alt="approveIcon"
+                        className="m-auto"
+                      />
+                    )}
+
+                    <p className="mt-10 font-semibold text-3xl px-10">
+                      {isApprove ? "Approve as recommended" : "Disapprove"}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-10 gap-5 mt-10 text-[18px]">
+                    <button
+                      className=" col-span-4 py-6 w-full text-red-500 rounded-md"
+                      onClick={() => {
+                        setIsConfirm(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="bg-secondary col-span-6 py-6 w-full  text-white rounded-[15.25px]"
+                      onClick={handleConfirm}
+                    >
+                      {confirming ? (
+                        <div className=" flex justify-center">
+                          <div className="loader "></div>
+                        </div>
+                      ) : (
+                        "Confirm"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {confirmed && (
+          <div
+            id="popup-modal"
+            className="flex overflow-y-auto overflow-x-hidden fixed bg-black bg-opacity-50 backdrop-blur-sm top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
+          >
+            <div className="relative p-4 w-full lg:max-w-[500px] max-w-[500px] max-h-full">
+              <div className="relative bg-white rounded-3xl shadow ">
+                <button
+                  onClick={() => setConfirmed(false)}
+                  className="absolute top-8 end-2.5 text-secondary bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-lg font-bold w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                >
+                  <svg
+                    className="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                  <span className="sr-only">Close modal</span>
+                </button>
+
+                {/* Modal Content */}
+                <div className="py-7  px-7 text-center">
+                  <div className="justify-center flex flex-col">
+                    {isApprove ? (
+                      <img
+                        src={ApproveIcon}
+                        alt="approveIcon"
+                        className="m-auto"
+                      />
+                    ) : (
+                      <img
+                        src={DispproveIcon}
+                        alt="approveIcon"
+                        className="m-auto"
+                      />
+                    )}
+
+                    <p className="mt-10 font-semibold text-3xl px-10">
+                      {isApprove ? "Approved as recommended!" : "Disapproved!"}
+                    </p>
                   </div>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import SideBar from "../Components/SideBar";
 import Email from "../assets/svg/email.svg";
@@ -29,7 +29,6 @@ const Overview = () => {
   const [drafts, setDrafts] = useState(0);
   const [archived, setArchived] = useState(0);
   const [starred, setStarred] = useState(0);
-  const [sent, setSent] = useState(0);
   const [memos, setMemos] = useState([]);
   const [stat, setStat] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -39,34 +38,47 @@ const Overview = () => {
     navigate("/messages", { state: { activeItem } });
   };
 
+  const hasFetchedData = useRef(false); // Add a ref to track if data has been fetched
+
   useEffect(() => {
+    if (hasFetchedData.current) return; // Prevent multiple fetches
+    hasFetchedData.current = true; // Set to true to prevent future fetches
+
     const fetchAll = async () => {
       setLoading(true);
-      const fetchedInbox = await allInbox();
-      setInbox(fetchedInbox.length);
-      if (fetchedInbox) {
+
+      try {
+        const fetchedInbox = await allInbox();
+        setInbox(fetchedInbox.length);
+        if (fetchedInbox.length > 0) {
+          setMemos(fetchedInbox);
+        } else {
+          setError("No memo Available");
+        }
+
+        const stats = await statistics();
+        setStat(stats);
+
+        const fetchedDraft = await AllDrafts();
+        setDrafts(fetchedDraft.length);
+
+        const fetchedArchived = await AllArchived();
+        setArchived(fetchedArchived.length);
+
+        const fetchedStarred = await AllStar();
+        setStarred(fetchedStarred.length);
+
+        // const fetchedSent = await allSent();
+        // setSent(fetchedSent.length);
+      } catch (error) {
+        setError("Failed to load data");
+      } finally {
         setLoading(false);
-        // console.log(fetchedInbox);
-        setMemos(fetchedInbox);
-      } else {
-        setError("No memo Available");
       }
-      const fetchedDraft = await AllDrafts();
-      setDrafts(fetchedDraft.length);
-      const fetchedArchived = await AllArchived();
-      setArchived(fetchedArchived.length);
-      const fetchedStarred = await AllStar();
-      setStarred(fetchedStarred.length);
-      const fetchedSent = await allSent();
-      setSent(fetchedSent.length);
-      const stats = await statistics();
-      setStat(stats);
-      // console.log(stats);
     };
 
     fetchAll();
   }, []);
-
   // console.log(stat);
 
   return (
@@ -156,7 +168,9 @@ const Overview = () => {
             <div className="bg-[#f6f6f6] rounded-lg py-[14px] px-4 flex justify-between items-center w-full ring-1 ring-[#595959]">
               <p className="ml-2 text-xl font-normal text-black">Pending</p>
               <div className="bg-[#FDAD00] rounded">
-                <p className="px-3 py-0.5 text-white">9</p>
+                <p className="px-3 py-0.5 text-white">
+                  {stat?.overall_statistics?.total_pending_memos || 0}
+                </p>
               </div>
             </div>
 

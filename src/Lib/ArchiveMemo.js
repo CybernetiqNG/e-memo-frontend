@@ -4,7 +4,7 @@ const ArchiveMemo = async (archived, id) => {
   const token = localStorage.getItem("token");
   const baseUrl = import.meta.env.VITE_BASE_URL;
 
-  // console.log(payload);
+  console.log("got here");
   if (token) {
     try {
       const response = await axios.post(

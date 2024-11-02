@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import WaterMark from "../Components/WaterMark";
 import Search from "../assets/svg/icons/search2.svg";
@@ -13,8 +13,12 @@ import formatDate from "../Utils/formatDate";
 import chat from "../Lib/Chat";
 import sendChat from "../Lib/SendChat";
 import Skeleton from "react-loading-skeleton";
+import { BsChatFill } from "react-icons/bs";
+import auth from "../Utils/auth";
+import debounce from "lodash/debounce";
 
 const Chat = () => {
+  auth();
   const [chats, setChats] = useState([]);
   const [id, setId] = useState();
   const [messages, setMessages] = useState([]);
@@ -27,29 +31,36 @@ const Chat = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredChats, setFilteredChats] = useState([]);
 
-  useEffect(() => {
-    const loadChats = async () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id;
+
+  // Load chats from local storage or API
+  const loadChats = useCallback(async () => {
+    const chatList = JSON.parse(localStorage.getItem("chatdata"));
+
+    if (chatList) {
+      setChats(chatList);
+    } else {
       const data = await allChat();
       setChats(data);
-      await setId(data[0]?.id);
-      await setSender(data[0]?.fullname);
-      await setImage(data[0]?.profile_image);
-      const id = await data[0]?.id;
-      loadChat(id);
-    };
-
-    loadChats();
+      localStorage.setItem("chatdata", JSON.stringify(data));
+    }
   }, []);
 
   const loadChat = async (id) => {
     setId(id);
-    // console.log("got here");
-    // console.log(id);
-    const data = await chat(id);
-    setMessages(data);
-    setLoading(false);
-    setIsChatOpen(true);
+    let data;
+    if (id) {
+      data = await chat(id);
+      setMessages(data);
+      setLoading(false);
+      setIsChatOpen(true);
+    }
   };
+
+  useEffect(() => {
+    loadChats();
+  }, [loadChats]);
 
   useEffect(() => {
     const result = chats.filter((chat) =>
@@ -58,31 +69,33 @@ const Chat = () => {
     setFilteredChats(result);
   }, [searchQuery, chats]);
 
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  //
-
+  // Set up auto-refresh for messages every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      loadChat(id);
+      if (id) loadChat(id);
       setSending(false);
     }, 5000);
 
     return () => clearInterval(interval);
   }, [id, sending]);
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user.id;
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
-  //   console.log(filteredChats);
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      sendChat(userId, id, message);
+      setSending(true);
+      setMessage("");
+    }
+  };
 
   return (
     <div className="lg:grid grid-cols-12 ">
       <SideBar />
       <div className="col-span-9 bg-[url('../assets/svg/bg.svg')] p-5 lg:pr-10 overflow-hidden relative flex flex-col">
-        <WaterMark />
+        {/* <WaterMark /> */}
 
         <div className="bg-primary p-3">
           <p className="ml-5 font-bold text-3xl">Chats</p>
@@ -202,15 +215,16 @@ const Chat = () => {
           </div>
 
           <div
-            className={`col-span-12 md:col-span-4 border border-[#838383] border-[0.5px] py-5 lg:px-9 px-3 bg-[#F4F4F4] rounded-[18px] flex flex-col  justify-between  ${
+            className={`col-span-12 md:col-span-4 border border-[#838383] border-[0.5px] py-5 lg:px-9 px-3 bg-[#F4F4F4] rounded-[18px] flex flex-col  justify-between overflow-hidden  ${
               isChatOpen ? "block" : "hidden md:block"
             }`}
           >
+            <WaterMark />
             {loading ? (
               <div className="flex m-auto">
                 <div className="loader-two "></div>
               </div>
-            ) : (
+            ) : id ? (
               <>
                 <div className="flex justify-between items-center py-3 px-6 bg-white rounded-lg border border-[#838383] border-[0.5px] relative">
                   <div className="inline-flex items-center">
@@ -270,46 +284,13 @@ const Chat = () => {
                         </div>
                       </div>
                     ))}
-                  {messages
-                    .slice(0)
-                    .reverse()
-                    .map((message) => (
-                      <div
-                        key={message.id}
-                        className={`flex ${
-                          id === message.sender_id
-                            ? "justify-start"
-                            : "justify-end"
-                        }`}
-                      >
-                        <div
-                          className={`p-3 rounded-t-lg max-w-xs ${
-                            id === message.sender_id
-                              ? "bg-white text-black rounded-br-lg"
-                              : "bg-primary text-black rounded-bl-lg"
-                          }`}
-                        >
-                          <p className="text-[11px] font-normal">
-                            {message.message}
-                          </p>
-                          <p
-                            className={`text-[8px] text-gray-500 ${
-                              id === message.sender_id
-                                ? "text-left"
-                                : "text-right"
-                            }`}
-                          >
-                            {formatDate(message.created_at)}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
                 </div>
                 <div className="flex justify-between items-center py-3 px-6 bg-white rounded-lg border border-[#838383] border-[0.5px]  w-full">
                   <input
                     className="text-base font-light border-none ring-none outline-none box-shadow-none w-full"
                     placeholder="Send Message"
                     onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     value={message}
                   />
 
@@ -329,6 +310,11 @@ const Chat = () => {
                   )}
                 </div>
               </>
+            ) : (
+              <div className="flex flex-col items-center mt-60">
+                <BsChatFill className="text-[#0E9F6E] w-28 h-28" />
+                <p className="mt-3 text-2xl font-bold text-grey">Chats</p>
+              </div>
             )}
           </div>
         </div>

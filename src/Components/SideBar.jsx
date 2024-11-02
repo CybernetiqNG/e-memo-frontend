@@ -131,7 +131,7 @@ const SideBar = () => {
               } inline-flex items-center py-2 px-5 rounded-md cursor-pointer`}
             >
               {location.pathname === "/chat" ? (
-                <BsChatFill className="bg-[ #434343] w-5 h-5 ml-1" />
+                <BsChatFill className=" w-5 h-5 ml-1" />
               ) : (
                 <BsChatFill className="w-5 h-5 ml-1" />
               )}
