@@ -76,7 +76,7 @@ function Layout() {
       ].includes(location.pathname) && <Header />}
 
       <Routes>
-        <Route path="/" element={<Navigate to="/overview" replace />} />
+        <Route path="/" element={<Navigate to="/sign-in" replace />} />
         <Route path="/overview" element={<Overview />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/profile" element={<Profile />} />

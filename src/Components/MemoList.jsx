@@ -121,7 +121,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
         <div className="grid grid-cols-5 flex justify-center items-center w-full">
           <input
             type="checkbox"
-            className="w-5 h-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none"
+            className="w-5 h-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none cursor-pointer"
             onChange={handleSelectAll}
             checked={selectedMemos.length === memos.length}
             indeterminate={
@@ -201,7 +201,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
             title="Search"
           />
 
-          <img src={Tune} className="w-6 h-6 ml-5" />
+          {/* <img src={Tune} className="w-6 h-6 ml-5" />ß */}
         </div>
       </div>
       <hr className=" border-t-1 border-[#00000030]" />

@@ -30,7 +30,7 @@ const Message = () => {
   const [sending, setSending] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isMinute, setIsMinute] = useState(false);
-  const [minuting, setMinuting] = useState(true);
+  const [minuting, setMinuting] = useState(false);
   const [isBudget, setIsBudget] = useState(false);
   const [isForward, setIsForward] = useState(false);
   const [budgets, setBudgets] = useState([]);
@@ -42,6 +42,7 @@ const Message = () => {
   const [isConfirm, setIsConfirm] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [minuteSent, setMinuteSent] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -95,8 +96,10 @@ const Message = () => {
 
     try {
       const response = await axios.post(
-        `${baseUrl}/memo/minute-and-close/1`,
+        `${baseUrl}/memo/forward-memo/2`,
         {
+          recipient_emails: [memo.sender_email],
+          memo_subject: memo.memo_subject,
           minute: comment,
         },
         {
@@ -106,11 +109,14 @@ const Message = () => {
         }
       );
 
-      // console.log(response);
+      console.log(response);
       // console.log(response.status);
-      const id = response.data.memo.id;
+
       if (response.status === 201) {
-        window.location.href = `/message/${id}`;
+        console.log("Tghissss");
+        setSending(false);
+        setMinuting(false);
+        setMinuteSent(true);
       } else {
         setSending(false);
         setError(response.message);
@@ -118,14 +124,14 @@ const Message = () => {
     } catch (err) {
       setSending(false);
       // console.log(err);
-      const errorMessage = err.response.data.message;
-      if (errorMessage.includes("Recipient user or position not found")) {
-        setError(
-          "Recipient or position not found. Please check the entered details."
-        );
-      } else {
-        setError("An error occurred while sending the memo. Please try again.");
-      }
+      // const errorMessage = err.response.data.message;
+      // if (errorMessage.includes("Recipient user or position not found")) {
+      //   setError(
+      //     "Recipient or position not found. Please check the entered details."
+      //   );
+      // } else {
+      //   setError("An error occurred while sending the memo. Please try again.");
+      // }
       setSending(false);
     }
   };
@@ -500,6 +506,18 @@ const Message = () => {
                           </button>
                         </div>
                         {note}
+                      </div>
+                    ) : minuteSent ? (
+                      <div className="flex flex-col">
+                        <img
+                          src={ApproveIcon}
+                          alt="approveIcon"
+                          className="m-auto"
+                        />
+
+                        <p className="mt-10 font-semibold text-3xl px-10">
+                          Sent Successfully!
+                        </p>
                       </div>
                     ) : (
                       <div className="lg:mt-10 mt-5 w-full items-end">

@@ -31,14 +31,15 @@ const Chat = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredChats, setFilteredChats] = useState([]);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON?.parse(localStorage?.getItem("user"));
   const userId = user?.id;
 
   // Load chats from local storage or API
   const loadChats = useCallback(async () => {
-    const chatList = JSON.parse(localStorage.getItem("chatdata"));
+    const chatList = JSON?.parse(localStorage?.getItem("chatdata"));
 
     if (chatList) {
+      // console.log(chatList);
       setChats(chatList);
     } else {
       const data = await allChat();

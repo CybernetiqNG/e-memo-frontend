@@ -21,6 +21,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import allChat from "../Lib/AllChats";
 
 const Overview = () => {
   auth();
@@ -38,11 +39,11 @@ const Overview = () => {
     navigate("/messages", { state: { activeItem } });
   };
 
-  const hasFetchedData = useRef(false); // Add a ref to track if data has been fetched
+  const hasFetchedData = useRef(false);
 
   useEffect(() => {
-    if (hasFetchedData.current) return; // Prevent multiple fetches
-    hasFetchedData.current = true; // Set to true to prevent future fetches
+    if (hasFetchedData.current) return;
+    hasFetchedData.current = true;
 
     const fetchAll = async () => {
       setLoading(true);
@@ -70,6 +71,9 @@ const Overview = () => {
 
         // const fetchedSent = await allSent();
         // setSent(fetchedSent.length);
+
+        const data = await allChat();
+        localStorage.setItem("chatdata", JSON.stringify(data));
       } catch (error) {
         setError("Failed to load data");
       } finally {
@@ -136,6 +140,7 @@ const Overview = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+
         <div className="lg:grid grid-cols-12 gap-6 mt-[52px] ">
           <div className="col-span-3 space-y-5">
             <a href="./compose">

@@ -81,7 +81,7 @@ const Profile = () => {
           <WaterMark />
           <img
             src={Bg}
-            className="mix-blend-luminosity -pl-5 -pr-5 w-full -pt-10"
+            className="mix-blend-multiply -pl-5 -pr-5 w-full -pt-10"
             alt="Profile Background"
           />
 
