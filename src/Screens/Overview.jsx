@@ -136,6 +136,7 @@ const Overview = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+
         <div className="lg:grid grid-cols-12 gap-6 mt-[52px] ">
           <div className="col-span-3 space-y-5">
             <a href="./compose">
