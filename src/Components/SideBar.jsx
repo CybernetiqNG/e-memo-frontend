@@ -219,7 +219,7 @@ const SideBar = () => {
               >
                 <div className="inline-flex">
                   <img src={auth ? Auth2 : Auth} alt="Authentication Icon" />
-                  <p className="ml-3">Authentication</p>
+                  <p className="ml-3">Authentications</p>
                 </div>
                 <div>{!auth ? <FaAngleDown /> : <FaAngleUp />}</div>
               </div>
