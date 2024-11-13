@@ -29,7 +29,7 @@ function Layout() {
 
   const navigate = useNavigate();
   const [isInactive, setIsInactive] = useState(false);
-  const logoutTime = 10 * 60 * 1000; // 2 minutes in milliseconds
+  const logoutTime = 2 * 60 * 1000; // 2 minutes in milliseconds
   let logoutTimer;
 
   const isLoggedIn = !!localStorage.getItem("authToken");

@@ -80,10 +80,10 @@ const Messages = () => {
           </p>
         </div>
 
-        <div className="bg-primary shadow-custom-shadow rounded-lg mt-10 grid grid-cols-7 relative overflow-hidden">
+        <div className="bg-primary shadow-custom-shadow rounded-lg mt-10 flex relative overflow-hidden">
           <WaterMark />
 
-          <div className="col-span-2 border-r-[1px] p-5 pb-16 border-[#000000]">
+          <div className="w-fit border-r-[1px] p-5 pb-16 border-[#000000]">
             <div className="bg-secondary rounded py-3 px-4 inline-flex items-center">
               <img src={EmailIcon} className="w-5 h-5" alt="Compose icon" />
               <a href="/compose">
@@ -116,7 +116,7 @@ const Messages = () => {
             </div>
           </div>
 
-          <div className="col-span-5">{renderComponent()}</div>
+          <div className="">{renderComponent()}</div>
         </div>
       </div>
     </div>
