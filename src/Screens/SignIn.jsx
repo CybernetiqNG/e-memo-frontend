@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Login from "../assets/svg/login.svg";
 import Logo from "../assets/svg/logo.svg";
+import Logo2 from "../assets/svg/eMemo.svg";
 import Email from "../assets/svg/email.svg";
 import Password from "../assets/svg/password.svg";
 
@@ -66,11 +67,10 @@ const SignIn = () => {
         {/* Left Column: Logo and Info */}
         <div className="lg:block hidden">
           <div className="text-center ">
-            <img
-              src={Logo}
-              className="h-10 flex justify-center m-auto"
-              alt="Logo"
-            />
+            <div className="mr-4 block inline-flex cursor-pointer py-1.5 font-sans text-base font-medium leading-relaxed text-primary antialiased">
+              <img src={Logo2} className="h-[46px] pr-2" />
+              <img src={Logo} />
+            </div>
             <p className="text-base font-light mt-4">
               Lorem ipsum dolor sit amet consectetur. Aliquam enim id leo a.
               Etiam congue mauris pellentesque quam.
@@ -83,6 +83,7 @@ const SignIn = () => {
         <div className="lg:pr-10 mt-10 flex flex-col justify-center w-full">
           {/* Mobile Logo */}
           <div className="flex justify-center lg:hidden mb-10">
+            <img src={Logo2} className="h-[46px] pr-2" />
             <img src={Logo} className="h-10" alt="Logo" />
           </div>
 

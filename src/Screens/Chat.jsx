@@ -44,6 +44,7 @@ const Chat = () => {
     } else {
       const data = await allChat();
       setChats(data);
+      // console.log(data);
       localStorage.setItem("chatdata", JSON.stringify(data));
     }
   }, []);
@@ -54,6 +55,7 @@ const Chat = () => {
     if (id) {
       data = await chat(id);
       setMessages(data);
+      // console.log(data);
       setLoading(false);
       setIsChatOpen(true);
     }

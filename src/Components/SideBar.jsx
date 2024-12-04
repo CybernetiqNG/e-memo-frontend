@@ -215,22 +215,13 @@ const SideBar = () => {
                     ? "bg-primary text-black"
                     : "bg-btn text-white"
                 } flex justify-between items-center py-2 px-5 rounded-md cursor-pointer`}
-                onClick={() => toggleVisibility(openAuth, auth)}
+                onClick={LogoutNow}
               >
                 <div className="inline-flex">
                   <img src={auth ? Auth2 : Auth} alt="Authentication Icon" />
-                  <p className="ml-3">Authentication</p>
+                  <p className="ml-3">Log Out</p>
                 </div>
-                <div>{!auth ? <FaAngleDown /> : <FaAngleUp />}</div>
               </div>
-              {auth && (
-                <button
-                  onClick={LogoutNow}
-                  className="w-full bg-white inline-flex py-2 px-5 rounded-md text-black cursor-pointer"
-                >
-                  <p className="ml-10">Log Out</p>
-                </button>
-              )}
             </div>
           </div>
         </div>

@@ -142,18 +142,6 @@ const Message = () => {
     governor = true;
   }
 
-  const printRef = useRef();
-
-  const handlePrint = () => {
-    const printContents = printRef.current.innerHTML;
-    const originalContents = document.body.innerHTML;
-
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-  };
-  // console.log(memo);
-
   const handleOptionClick = (option) => {
     // Check if the option is already selected
     if (!recipient.includes(option)) {
@@ -204,7 +192,7 @@ const Message = () => {
       // const id = response.data.memo.id;
       // console.log(id, "dcejhcej");
       if (response.status === 201) {
-        console.log("got here");
+        // console.log("got here");
         window.location.href = `/message/${id}`;
         setNote("Forwarded Succressfully");
       } else {
@@ -213,7 +201,7 @@ const Message = () => {
       }
     } catch (err) {
       setSending(false);
-      console.log(err);
+      // console.log(err);
       const errorMessage = err.response;
       if (errorMessage.includes("Recipient user or position not found")) {
         setError(
@@ -268,10 +256,7 @@ const Message = () => {
           </p>
         </div>
 
-        <div
-          ref={printRef}
-          className="relative bg-primary shadow-custom-shadow pt-7 lg:px-20 px-5 pb-16 rounded-lg mt-10 min-h-[450px] overflow-hidden"
-        >
+        <div className="relative bg-primary shadow-custom-shadow pt-7 lg:px-20 px-5 pb-16 rounded-lg mt-10 min-h-[450px] overflow-hidden">
           <WaterMark />
           <img src={Logo} className="flex m-auto w-16 h-16" />
           <p className="text-secondary text-base text-center font-bold mt-4 uppercase">
@@ -365,15 +350,7 @@ const Message = () => {
               {isOpen && (
                 <>
                   {governor ? (
-                    <div className="absolute -top-[276px] w-full flex-col gap-3">
-                      {/* <button
-                        className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
-                        onClick={() => {
-                          openMinute(), setIsOpen(!isOpen);
-                        }}
-                      >
-                        Minute
-                      </button> */}
+                    <div className="absolute -top-[136px] w-full flex-col gap-3">
                       <button
                         className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
                         onClick={() => {
@@ -390,23 +367,9 @@ const Message = () => {
                       >
                         Forward
                       </button>
-                      <button
-                        className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
-                        onClick={handlePrint}
-                      >
-                        Print
-                      </button>
                     </div>
                   ) : (
-                    <div className="absolute -top-[135px] w-full flex-col gap-3">
-                      {/* <button
-                        className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
-                        onClick={() => {
-                          openMinute(), setIsOpen(!isOpen);
-                        }}
-                      >
-                        Minute
-                      </button> */}
+                    <div className="absolute -top-[68px] w-full flex-col gap-3">
                       <button
                         className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
                         onClick={() => {
@@ -414,12 +377,6 @@ const Message = () => {
                         }}
                       >
                         Forward
-                      </button>
-                      <button
-                        className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
-                        onClick={handlePrint}
-                      >
-                        Print
                       </button>
                     </div>
                   )}

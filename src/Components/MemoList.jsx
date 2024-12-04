@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Reload from "../assets/svg/icons/reload.svg";
 import MenuH from "../assets/svg/icons/menu.svg";
 import Tune from "../assets/svg/icons/tune.svg";
@@ -12,6 +13,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import formatDate from "../Utils/formatDate";
 import StarMemo from "../Lib/StarMemo";
 import ArchiveMemo from "../Lib/ArchiveMemo";
+import axios from "axios";
+import Unviewed from "../Lib/ViewedMemo";
 
 const MemoList = ({ fetchMemos, pageTitle, starred }) => {
   const [memos, setMemos] = useState([]);
@@ -24,6 +27,8 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
   const [selectedMemos, setSelectedMemos] = useState([]);
   const [page, setPage] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
@@ -32,6 +37,9 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
         setLoading(false);
         await setMemos(fetchedMemos);
       }
+      // console.log(fetchedMemos);
+      const unviewed = await Unviewed();
+      console.log(unviewed);
 
       if (fetchedMemos.length === 0) {
         setError("No memo available");
@@ -112,11 +120,37 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
     }
   };
 
-  // console.log(memos);
-  // console.log(selectedMemos);
+  const baseUrl = import.meta.env.VITE_BASE_URL;
+  const token = localStorage.getItem("token");
+
+  const handleView = async (id) => {
+    if (pageTitle === "Inbox Memos") {
+      try {
+        const response = await axios.post(
+          `${baseUrl}/memo/view-memo`,
+          {
+            notify_status: 1,
+            memo_id: id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // console.log("===========Got here=========");
+        navigate(`/message/${id}`);
+      } catch (err) {
+        console.error("Error while viewing memo:", err);
+      }
+    } else {
+      navigate(`/message/${id}`);
+    }
+  };
 
   return (
-    <div className="col-span-5 ">
+    <div className="col-span-2  w-full">
       <div className="flex justify-between items-center py-8 px-8 ">
         <div className="grid grid-cols-5 flex justify-center items-center w-full">
           <input
@@ -230,12 +264,17 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
         <div className="overflow-y-scroll scrollbar-hidden h-[60vh]">
           {filteredMemos.length > 0 ? (
             filteredMemos.map((memo) => (
-              <a
-                href={`./message/${memo.id}`}
+              <div
+                // href={`./message/${memo.id}`}
                 key={memo.id}
                 onClick={(e) => {}}
               >
-                <div className="grid grid-cols-4 py-5 px-8 ">
+                <div
+                  className={`grid grid-cols-4 py-5 px-8 ${
+                    memo.notify_status === 0 ? "font-bold" : "font-normal"
+                  }`}
+                  onClick={() => handleView(memo.id)}
+                >
                   <div className="col-span-2 grid grid-cols-7 items-center">
                     <input
                       type="checkbox"
@@ -264,7 +303,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
                     {formatDate(memo.date_sent)}
                   </p>
                 </div>
-              </a>
+              </div>
             ))
           ) : (
             <p className="flex justify-center py-10">{error}</p>

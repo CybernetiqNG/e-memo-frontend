@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import Logo from "../assets/svg/logo.svg";
 import Logo2 from "../assets/svg/logo2.svg";
+import Logo3 from "../assets/svg/eMemo.svg";
 import { useNavigate } from "react-router-dom";
 import Border from "../assets/svg/border.svg";
 import Person from "../assets/svg/person.svg";
@@ -64,8 +65,9 @@ const Header = () => {
         <div className="flex items-center justify-between ">
           <a
             href="/"
-            className="mr-4 block cursor-pointer py-1.5 font-sans text-base font-medium leading-relaxed text-primary antialiased"
+            className="mr-4 block inline-flex cursor-pointer py-1.5 font-sans text-base font-medium leading-relaxed text-primary antialiased"
           >
+            <img src={Logo3} className="h-[46px] pr-2" />
             <img src={Logo} />
           </a>
           <div className="flex items-center">

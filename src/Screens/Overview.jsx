@@ -73,6 +73,7 @@ const Overview = () => {
         // setSent(fetchedSent.length);
 
         const data = await allChat();
+        console.log(data);
         localStorage.setItem("chatdata", JSON.stringify(data));
       } catch (error) {
         setError("Failed to load data");

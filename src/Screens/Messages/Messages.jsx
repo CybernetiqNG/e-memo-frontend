@@ -116,7 +116,7 @@ const Messages = () => {
             </div>
           </div>
 
-          <div className="">{renderComponent()}</div>
+          <div className="w-full">{renderComponent()}</div>
         </div>
       </div>
     </div>
