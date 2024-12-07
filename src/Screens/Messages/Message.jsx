@@ -63,6 +63,7 @@ const Message = () => {
 
         if (fetchedMemo) {
           setMemo(fetchedMemo);
+          // console.log(fetchedMemo);
           setMinutes(fetchedMemo.minutes);
 
           const mda = fetchedMemo.sender_mda_id;
@@ -74,7 +75,7 @@ const Message = () => {
           navigate("/error");
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -109,11 +110,11 @@ const Message = () => {
         }
       );
 
-      console.log(response);
+      // console.log(response);
       // console.log(response.status);
 
       if (response.status === 201) {
-        console.log("Tghissss");
+        // console.log("Tghissss");
         setSending(false);
         setMinuting(false);
         setMinuteSent(true);
@@ -252,7 +253,7 @@ const Message = () => {
           </div>
 
           <p className="go-back">
-            Dashboard / <span className="text-secondary">Inbox</span>
+            Dashboard / <span className="text-secondary">View memo</span>
           </p>
         </div>
 

@@ -22,6 +22,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import allChat from "../Lib/AllChats";
+import Unviewed from "../Lib/ViewedMemo";
+import Disapproved from "../Lib/Disapproved";
+import AllApproved from "../Lib/Approved";
 
 const Overview = () => {
   auth();
@@ -34,6 +37,9 @@ const Overview = () => {
   const [stat, setStat] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [unviewed, setUnviewed] = useState([]);
+  const [rejected, setRejected] = useState(0);
+  const [approved, setApproved] = useState(0);
 
   const handleItemClick = (activeItem) => {
     navigate("/messages", { state: { activeItem } });
@@ -63,17 +69,24 @@ const Overview = () => {
         const fetchedDraft = await AllDrafts();
         setDrafts(fetchedDraft.length);
 
+        const fetchDisapproved = await Disapproved();
+        setRejected(fetchDisapproved.length);
+
+        const fetchApproved = await AllApproved();
+        setApproved(fetchApproved.length);
+
         const fetchedArchived = await AllArchived();
         setArchived(fetchedArchived.length);
 
         const fetchedStarred = await AllStar();
         setStarred(fetchedStarred.length);
 
-        // const fetchedSent = await allSent();
-        // setSent(fetchedSent.length);
+        const unviewed = await Unviewed();
+        setUnviewed(unviewed);
+        // console.log(unviewed);
 
         const data = await allChat();
-        console.log(data);
+        // console.log(data);
         localStorage.setItem("chatdata", JSON.stringify(data));
       } catch (error) {
         setError("Failed to load data");
@@ -96,7 +109,7 @@ const Overview = () => {
         </div>
         <div className="grid lg:grid-cols-3 grid-cols-2 mt-7 gap-x-2 gap-y-5">
           <div className=" py-8 bg-secondary py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-white">
-            <p className="font-bold text-[32px]">4</p>
+            <p className="font-bold text-[32px]">{approved}</p>
             <p className="font-light text-base lg:ml-4">Approved</p>
           </div>
           <div className=" py-8 bg-[#FF9400] py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-white">
@@ -106,7 +119,7 @@ const Overview = () => {
             <p className="font-light text-base lg:ml-4">Pending</p>
           </div>
           <div className=" py-8 bg-[#FF331C] py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-white">
-            <p className="font-bold text-[32px]">10</p>
+            <p className="font-bold text-[32px]">{rejected}</p>
             <p className="font-light text-base lg:ml-4">Rejected</p>
           </div>
           <div className=" py-8 bg-ash py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-black">
@@ -123,7 +136,9 @@ const Overview = () => {
             <p className="font-light text-base lg:ml-4">Memos Received</p>
           </div>
           <div className=" py-8 bg-ash py-[35px] rounded-[10px] flex-col lg:flex-row justify-center lg:inline-flex items-center flex w-full text-black">
-            <p className="font-bold text-[32px]">50</p>
+            <p className="font-bold text-[32px]">
+              {stat?.overall_statistics?.total_memos_sent + drafts || 0}
+            </p>
             <p className="font-light text-base lg:ml-4">Memos Created</p>
           </div>
         </div>

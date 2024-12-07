@@ -40,14 +40,16 @@ const Help = () => {
       <div className="col-span-9 bg-[url('../assets/svg/bg.svg')] lg:p-20 p-5 overflow-hidden relative">
         <WaterMark />
         <div className="flex lg:flex-row flex-col justify-between">
-          <p className="page-head">FAQs</p>
+          {/* <p className="page-head">FAQs</p> */}
+          <p className="page-head">Help</p>
+
           <p className="go-back">
             Dashboard / <span className="text-secondary">Help & Support</span>
           </p>
         </div>
 
         <div className="bg-white rounded-xl shadow-custom-shadow lg:py-11 lg:pl-11 lg:pr-10 lg:pr-14 p-5 mt-10 space-y-5">
-          {faqs.map((faq, index) => (
+          {/* {faqs.map((faq, index) => (
             <div key={index} className="bg-primary px-8 py-5">
               <div
                 className="flex justify-between items-center cursor-pointer"
@@ -60,9 +62,10 @@ const Help = () => {
                 <p className="faq-text mt-3">{faq.answer}</p>
               )}
             </div>
-          ))}
+          ))} */}
 
-          <div className="pt-16">
+          {/* <div className="pt-16"> */}
+          <div className="pt-3">
             <p className="text-2xl font-semibold">
               Contact Details for Technical Support
             </p>

@@ -35,7 +35,7 @@ const Logout = async () => {
       }
     }
   } else {
-    console.log("No token found, please log in.");
+    // console.log("No token found, please log in.");
   }
 };
 

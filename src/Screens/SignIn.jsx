@@ -72,8 +72,8 @@ const SignIn = () => {
               <img src={Logo} />
             </div>
             <p className="text-base font-light mt-4">
-              Lorem ipsum dolor sit amet consectetur. Aliquam enim id leo a.
-              Etiam congue mauris pellentesque quam.
+              Efficient administration of internal memorandum and
+              correspondences in the public sector/government-to-government
             </p>
           </div>
           <img src={Login} alt="Login Illustration" className="mt-10" />

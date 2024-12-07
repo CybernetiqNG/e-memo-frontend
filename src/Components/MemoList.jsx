@@ -39,7 +39,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
       }
       // console.log(fetchedMemos);
       const unviewed = await Unviewed();
-      console.log(unviewed);
+      // console.log(unviewed);
 
       if (fetchedMemos.length === 0) {
         setError("No memo available");
@@ -61,6 +61,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
           memo.memo_subject.toLowerCase().includes(searchQuery.toLowerCase())
       );
     setFilteredMemos(result);
+    // console.log(filteredMemos);
   }, [searchQuery, memos]);
 
   const handleSearch = (e) => {
@@ -261,7 +262,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
           <div className="loader-two "></div>
         </div>
       ) : (
-        <div className="overflow-y-scroll scrollbar-hidden h-[60vh]">
+        <div className="overflow-y-scroll scrollbar-hidden h-[60vh] cursor-pointer">
           {filteredMemos.length > 0 ? (
             filteredMemos.map((memo) => (
               <div
@@ -271,7 +272,9 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
               >
                 <div
                   className={`grid grid-cols-4 py-5 px-8 ${
-                    memo.notify_status === 0 ? "font-bold" : "font-normal"
+                    memo.notify_status === 0 && pageTitle === "Inbox Memos"
+                      ? "font-bold"
+                      : "font-normal"
                   }`}
                   onClick={() => handleView(memo.id)}
                 >

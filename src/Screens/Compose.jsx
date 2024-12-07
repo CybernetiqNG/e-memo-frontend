@@ -42,6 +42,7 @@ const Compose = () => {
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [signature, setSignature] = useState(false);
+  const [signing, setSigning] = useState(false);
   const [err, setErr] = useState("");
 
   const date = todayDate();
@@ -49,6 +50,11 @@ const Compose = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
   const baseUrl = import.meta.env.VITE_BASE_URL;
+  const sign_data = `
+  <div class="mt-[30px] font-medium ">
+  <p class="mb-[10px] underline"> Signature </p>
+    <img src="${user.staff_signature}" alt="Staff_signature" class=" object-contain" />
+  </div>`;
 
   const handleCreate = async (choice) => {
     // console.log(choice);
@@ -68,13 +74,20 @@ const Compose = () => {
       choice === "send-memo" ? setLoadingMemo(true) : setLoadingDraft(true);
     }
 
+    let memo_content;
+    if (signature) {
+      memo_content = message + sign_data;
+    } else {
+      memo_content = message;
+    }
+
     try {
       const response = await axios.post(
         `${baseUrl}/memo/${choice}`,
         {
           recipient_email: recipient,
           memo_subject: subject,
-          memo_content: message,
+          memo_content: memo_content,
         },
         {
           headers: {
@@ -116,8 +129,10 @@ const Compose = () => {
   const handleSignature = async () => {
     try {
       const result = await Signature(user.email, password);
+      setSigning(true);
       // console.log(result);
       if (result === true) {
+        setSigning(false);
         setSignature(true);
         closeSignature();
       } else {
@@ -207,7 +222,7 @@ const Compose = () => {
                           <div className="loader-two "></div>
                         </div>
                       ) : (
-                        options.map((option, index) => (
+                        options?.map((option, index) => (
                           <div
                             key={index}
                             onClick={() => handleOptionClick(option)}
@@ -257,12 +272,18 @@ const Compose = () => {
                   />
                 </div>
               </div>
-              <button
-                onClick={openSignature}
-                className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-5 rounded-[7px] text-white hover:bg-primary hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
-              >
-                {signature ? "Signed" : "Add Signature"}
-              </button>
+              {signature ? (
+                <div className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-5 rounded-[7px] text-white  ring-btn item-center ">
+                  Signed
+                </div>
+              ) : (
+                <button
+                  onClick={openSignature}
+                  className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-5 rounded-[7px] text-white hover:bg-primary hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
+                >
+                  Add Signature
+                </button>
+              )}
 
               {error && <p className="text-red-500 mt-5 -mb-5">{error}</p>}
               <div className="lg:grid grid-cols-2 gap-2 pt-10 space-y-3 lg:space-y-0">
@@ -272,31 +293,39 @@ const Compose = () => {
                 >
                   Preview Memo
                 </button>
-                <button
-                  onClick={async () => {
-                    setLoadingDraft(true);
-                    await handleCreate("save-draft");
-                    setLoadingDraft(false);
-                  }}
-                  className="text-center justify-center flex items-center w-full bg-transaprent p-7 rounded-[7px] hover:text-white hover:bg-secondary ring-1 text-secondary ring-secondary item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
-                >
-                  {loadingDraft ? (
+                {loadingDraft ? (
+                  <button className="text-center justify-center flex items-center w-full bg-transaprent p-7 rounded-[7px] hover:text-white hover:bg-secondary ring-1 text-secondary ring-secondary item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102">
                     <div className="loader"></div>
-                  ) : (
-                    "Save to Drafts"
-                  )}
-                </button>
+                  </button>
+                ) : (
+                  <button
+                    onClick={async () => {
+                      setLoadingDraft(true);
+                      await handleCreate("save-draft");
+                      setLoadingDraft(false);
+                    }}
+                    className="text-center justify-center flex items-center w-full bg-transaprent p-7 rounded-[7px] hover:text-white hover:bg-secondary ring-1 text-secondary ring-secondary item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
+                  >
+                    Save to Drafts
+                  </button>
+                )}
 
-                <button
-                  onClick={async () => {
-                    setLoadingMemo(true);
-                    await handleCreate("send-memo");
-                    setLoadingMemo(false);
-                  }}
-                  className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-7 rounded-[7px] text-white hover:bg-primary ring-1 hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
-                >
-                  {loadingMemo ? <div className="loader"></div> : "Create Memo"}
-                </button>
+                {loadingMemo ? (
+                  <button className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-7 rounded-[7px] text-white hover:bg-primary ring-1 hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102">
+                    <div className="loader"></div>
+                  </button>
+                ) : (
+                  <button
+                    onClick={async () => {
+                      setLoadingMemo(true);
+                      await handleCreate("send-memo");
+                      setLoadingMemo(false);
+                    }}
+                    className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-7 rounded-[7px] text-white hover:bg-primary ring-1 hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
+                  >
+                    Create Memo
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -348,13 +377,18 @@ const Compose = () => {
                       >
                         Go back
                       </button>
-
-                      <button
-                        onClick={handleSignature}
-                        className="text-white bg-secondary hover:bg-transparent hover:text-secondary ring-secondary ring-1 focus:outline-none font-medium rounded-lg text-2xl px-5 py-2.5 flex justify-center items-center flex-1"
-                      >
-                        Confirm
-                      </button>
+                      {signing ? (
+                        <button className="text-white bg-secondary hover:bg-transparent hover:text-secondary ring-secondary ring-1 focus:outline-none font-medium rounded-lg text-2xl px-5 py-2.5 flex justify-center items-center flex-1">
+                          <div className="loader"></div>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleSignature}
+                          className="text-white bg-secondary hover:bg-transparent hover:text-secondary ring-secondary ring-1 focus:outline-none font-medium rounded-lg text-2xl px-5 py-2.5 flex justify-center items-center flex-1"
+                        >
+                          Confirm
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -407,7 +441,7 @@ const Compose = () => {
                 <div className="mt-11">
                   <p
                     className="preview-text"
-                    dangerouslySetInnerHTML={{ __html: message }}
+                    dangerouslySetInnerHTML={{ __html: message + sign_data }}
                   ></p>
                 </div>
                 <div className="mt-7">
@@ -478,15 +512,20 @@ const Compose = () => {
                       >
                         Not Yet
                       </button>
-
-                      <button
-                        onClick={() => {
-                          handleCreate("send-memo");
-                        }}
-                        className="text-white bg-secondary hover:bg-[#FDAD30] focus:ring-4 focus:outline-none font-semibold rounded-lg text-2xl px-5 py-2.5 flex justify-center items-center flex-1"
-                      >
-                        Send
-                      </button>
+                      {loadingMemo ? (
+                        <button className="text-white bg-secondary hover:bg-[#FDAD30] focus:ring-4 focus:outline-none font-semibold rounded-lg text-2xl px-5 py-2.5 flex justify-center items-center flex-1">
+                          <div className="loader"></div>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            handleCreate("send-memo");
+                          }}
+                          className="text-white bg-secondary hover:bg-[#FDAD30] focus:ring-4 focus:outline-none font-semibold rounded-lg text-2xl px-5 py-2.5 flex justify-center items-center flex-1"
+                        >
+                          Send
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

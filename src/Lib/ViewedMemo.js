@@ -14,7 +14,7 @@ const Unviewed = async () => {
 
       if (response.status === 200) {
         // console.log(response.data.memos);
-        const data = response.data.memos;
+        const data = response.data.not_viewed_memos;
 
         return data;
       } else {

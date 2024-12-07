@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, Link } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/svg/logo.svg";
 import Logo2 from "../assets/svg/logo2.svg";
 import Logo3 from "../assets/svg/eMemo.svg";
-import { useNavigate } from "react-router-dom";
 import Border from "../assets/svg/border.svg";
 import Person from "../assets/svg/person.svg";
 import { FaAngleDown, FaAngleUp, FaBell } from "react-icons/fa6";
 import Logout from "../Lib/LogOut";
 import Bg from "../assets/svg/profilebg.svg";
 import Camera from "../assets/svg/camera.svg";
+import Unviewed from "../Lib/ViewedMemo";
 
 const Header = () => {
+  const profileRef = useRef(null);
+  const notifyRef = useRef(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isNotify, setIsNotify] = useState(false);
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem("user")) || {}
   );
+  const [notification, setNotification] = useState([]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -53,6 +57,60 @@ const Header = () => {
     Logout();
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target) &&
+        notifyRef.current &&
+        !notifyRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+        setIsNotify(false);
+      } else if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      } else if (
+        notifyRef.current &&
+        !notifyRef.current.contains(event.target)
+      ) {
+        setIsNotify(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // console.log(fetchedMemos);
+      const unviewed = await Unviewed();
+      // console.log(unviewed);
+      setNotification(unviewed);
+    };
+
+    fetchData();
+  }, []);
+
+  const groupedNotifications = notification.reduce((acc, memo) => {
+    const key = memo.sender_position;
+    if (!acc[key]) {
+      acc[key] = { count: 0, sender_mda_name: memo.sender_mda_name };
+    }
+    acc[key].count += 1;
+    return acc;
+  }, {});
+
+  const navigate = useNavigate();
+  const handleItemClick = (activeItem) => {
+    navigate("/messages", { state: { activeItem } });
+  };
+
   return (
     <>
       <nav
@@ -64,20 +122,21 @@ const Header = () => {
       >
         <div className="flex items-center justify-between ">
           <a
-            href="/"
+            href="/overview"
             className="mr-4 block inline-flex cursor-pointer py-1.5 font-sans text-base font-medium leading-relaxed text-primary antialiased"
           >
             <img src={Logo3} className="h-[46px] pr-2" />
             <img src={Logo} />
           </a>
           <div className="flex items-center">
-            <div className=" items-center gap-x-1 lg:block hidden">
+            <div className=" items-center gap-x-1 ">
               <div className="relative ">
                 <div
-                  className="bg-white inline-flex items-center rounded-md py-2 px-6 h-[53px] cursor-pointer "
+                  className="bg-white inline-flex items-center rounded-md py-2 px-6 h-[53px] cursor-pointer lg:flex hidden"
                   onClick={() => {
                     setIsOpen(!isOpen);
                   }}
+                  ref={profileRef}
                 >
                   <div className="relative">
                     <img
@@ -131,6 +190,32 @@ const Header = () => {
                     </button>
                   </div>
                 )}
+                {isNotify && (
+                  <div
+                    className="absolute flex-col w-[120%]    "
+                    style={{ top: "70px", zIndex: "10" }}
+                    ref={notifyRef}
+                  >
+                    <div className="text-left left-0 bg-white ring-1 text-xs ring-secondary py-3 px-3 rounded-md text-black cursor-pointer  w-full  space-y-1 max-h-[60vh] overflow-scroll scrollbar-hidden  lg:block hidden">
+                      {Object.entries(groupedNotifications).map(
+                        ([position, data]) => (
+                          <p
+                            key={position}
+                            className="border-b border-secondary border-1 pb-1"
+                            onClick={() => {
+                              handleItemClick();
+                            }}
+                          >
+                            You have{" "}
+                            <span className="font-semibold">{data.count}</span>{" "}
+                            unread memo(s) from {position} (
+                            {data.sender_mda_name})
+                          </p>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -149,8 +234,19 @@ const Header = () => {
                 />
               </div>
             </a>
-            <div className="hidden lg:block">
-              <FaBell className="w-7 h-7 ml-2.5" style={{ color: "red" }} />
+            <div
+              className="block relative cursor-pointer"
+              onClick={() => {
+                setIsNotify(!isNotify);
+              }}
+              ref={notifyRef}
+            >
+              <FaBell className="w-7 h-7 ml-2.5 " style={{ color: "red" }} />
+              <div className="absolute top-1.5 left-4 w-4 h-4 flex items-center justify-center">
+                <p className="text-center text-white text-xs font-semibold ">
+                  {notification.length}
+                </p>
+              </div>
             </div>
             <button
               onClick={toggleMobileMenu}

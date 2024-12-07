@@ -58,7 +58,7 @@ const Profile = () => {
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setLoading(false);
     } catch (error) {
-      console.error("Error updating profile picture:", error);
+      // console.error("Error updating profile picture:", error);
     }
   };
 
