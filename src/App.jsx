@@ -80,7 +80,7 @@ function Layout() {
         <Route path="/overview" element={<Overview />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/notifications" element={<Notification />} />
+        {/* <Route path="/notifications" element={<Notification />} /> */}
         <Route path="/compose" element={<Compose />} />
         <Route path="/message/:id" element={<Message />} />
         <Route path="/messages" element={<Messages />} />

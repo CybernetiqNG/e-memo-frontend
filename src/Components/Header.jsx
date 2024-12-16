@@ -208,8 +208,10 @@ const Header = () => {
                           >
                             You have{" "}
                             <span className="font-semibold">{data.count}</span>{" "}
-                            unread memo(s) from {position} (
-                            {data.sender_mda_name})
+                            unread memo(s) from{" "}
+                            <span className="font-semibold">
+                              {position} ({data.sender_mda_name}){" "}
+                            </span>
                           </p>
                         )
                       )}

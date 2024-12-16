@@ -140,7 +140,7 @@ const SideBar = () => {
             </Link>
 
             {/* Notifications Link  */}
-            <Link
+            {/* <Link
               to="/notifications"
               className={`w-full ${
                 location.pathname === "/notifications"
@@ -157,7 +157,7 @@ const SideBar = () => {
                 alt="Notification Icon"
               />
               <p className="ml-3">Notification</p>
-            </Link>
+            </Link> */}
 
             {/* Favourite Link */}
             <div

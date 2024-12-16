@@ -157,7 +157,7 @@ const Overview = () => {
           </ResponsiveContainer>
         </div>
 
-        <div className="lg:grid grid-cols-12 gap-6 mt-[52px] ">
+        <div className="lg:grid grid-cols-7 gap-6 mt-[52px] ">
           <div className="col-span-3 space-y-5">
             <a href="./compose">
               {" "}
@@ -225,7 +225,7 @@ const Overview = () => {
               </button>
             </div>
             <div className="pt-7 space-y-3">
-              {loading || memos.length < 1 ? (
+              {/* {loading || memos.length < 1 ? (
                 <div className="space-y-2">
                   <div className="bg-white py-2 px-4 w-full ring-1 ring-[#00000030] rounded-[10px]">
                     <Skeleton className="h-5 w-20" />
@@ -246,7 +246,7 @@ const Overview = () => {
                 </div>
               ) : (
                 <></>
-              )}
+              )} */}
               {memos.length > 0 ? (
                 memos.slice(-4).map((memo) => (
                   <a href={`./message/${memo.id}`} key={memo.id}>
@@ -267,7 +267,7 @@ const Overview = () => {
               )}
             </div>
           </div>
-          <div className="col-span-5 ring-1 ring-tertiary bg-primary rounded-[10px] pl-7 pr-12 py-7 lg:mt-0 mt-5">
+          {/* <div className="col-span-5 ring-1 ring-tertiary bg-primary rounded-[10px] pl-7 pr-12 py-7 lg:mt-0 mt-5">
             <p className="font-medium text-sm">Notification</p>
             <div className="pt-4 space-y-6">
               <div>
@@ -295,7 +295,7 @@ const Overview = () => {
                 <p className="text-gray-500 text-xs mt-2">12th June, 2023</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -37,7 +37,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
         setLoading(false);
         await setMemos(fetchedMemos);
       }
-      // console.log(fetchedMemos);
+      console.log(fetchedMemos);
       const unviewed = await Unviewed();
       // console.log(unviewed);
 
@@ -294,10 +294,20 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
                         e.preventDefault();
                       }}
                     />
-                    <p className="col-span-5 message-text line-clamp-2">
-                      {memo.sender_position} |{" "}
-                      {memo.sender_mda_acronym || memo.recipient_mda_acronym}
-                    </p>
+                    <div className="col-span-5 flex items-center">
+                      {memo.sender_profile_image && (
+                        <img
+                          src={memo.sender_profile_image}
+                          alt="sender_image"
+                          className="w-10 rounded-full mr-4"
+                        />
+                      )}
+
+                      <p className=" message-text line-clamp-2">
+                        {memo.sender_position} |{" "}
+                        {memo.sender_mda_acronym || memo.recipient_mda_acronym}
+                      </p>
+                    </div>
                   </div>
                   <p className="ml-5 message-text line-clamp-2">
                     {memo.memo_subject}
