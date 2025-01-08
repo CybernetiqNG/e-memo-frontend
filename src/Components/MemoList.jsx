@@ -16,7 +16,7 @@ import ArchiveMemo from "../Lib/ArchiveMemo";
 import axios from "axios";
 import Unviewed from "../Lib/ViewedMemo";
 
-const MemoList = ({ fetchMemos, pageTitle, starred }) => {
+const MemoList = ({ fetchMemos, pageTitle, starred, archived }) => {
   const [memos, setMemos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredMemos, setFilteredMemos] = useState([]);
@@ -84,7 +84,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
     );
   };
 
-  const handleArchive = async () => {
+  const handleBulkArchive = async () => {
     setLoading(true);
     // console.log("======here2======");
 
@@ -103,10 +103,18 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
     setReloadKey((prevKey) => prevKey + 1);
   };
 
-  const handleStar = async (id) => {
-    // console.log("======here3======");
+  const handleArchive = async (id) => {
+    archived ? await ArchiveMemo("0", [id]) : await ArchiveMemo("1", [id]);
 
-    starred ? await StarMemo("0", [id]) : await StarMemo("1", [id]);
+    setReloadKey((prevKey) => prevKey + 1);
+  };
+
+  const handleStar = async (id, status) => {
+    // console.log("======here3======");
+    console.log(status);
+    starred || status === 1
+      ? await StarMemo("0", [id])
+      : await StarMemo("1", [id]);
 
     setReloadKey((prevKey) => prevKey + 1);
   };
@@ -185,7 +193,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
               <div
                 onClick={() => {
                   {
-                    handleArchive();
+                    handleBulkArchive();
                   }
                 }}
                 className="w-6 h-6 cursor-pointer"
@@ -247,7 +255,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
             className="w-5 h-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none "
           /> */}
 
-          <p className="ml-24 message-head">
+          <p className="ml-28 message-head">
             {pageTitle === "Sent Memos" ? "Recipient" : "Sender"}
           </p>
         </div>
@@ -278,23 +286,41 @@ const MemoList = ({ fetchMemos, pageTitle, starred }) => {
                   }`}
                   onClick={() => handleView(memo.id)}
                 >
-                  <div className="col-span-2 grid grid-cols-7 items-center">
+                  <div className="col-span-2 grid grid-cols-10 items-center">
                     <input
                       type="checkbox"
                       className="col-span-1 w-5 h-5 mr-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none"
                       checked={selectedMemos.includes(memo.id)}
-                      onChange={() => handleCheckboxChange(memo.id)}
+                      onChange={() => {
+                        handleCheckboxChange(memo.id), e.stopPropagation();
+                        e.preventDefault();
+                      }}
                     />
                     {/* {console.log(memo.starred)} */}
                     <img
                       src={starred || memo.starred ? Star2 : Star}
                       className="w-4 h-4 col-sapn-1"
                       onClick={(e) => {
-                        handleStar(memo.id), e.stopPropagation();
+                        handleStar(memo.id, memo.starred), e.stopPropagation();
                         e.preventDefault();
                       }}
                     />
-                    <div className="col-span-5 flex items-center">
+                    <div
+                      className="w-5 h-5 col-sapn-1"
+                      onClick={(e) => {
+                        handleArchive(memo.id);
+                        e.stopPropagation();
+                        e.preventDefault();
+                      }}
+                    >
+                      {archived || memo.archived ? (
+                        <MdOutlineUnarchive className="w-full h-full" />
+                      ) : (
+                        <img src={Archive} alt="Archive Logo" />
+                      )}
+                    </div>
+
+                    <div className="col-span-7 flex items-center ">
                       {memo.sender_profile_image && (
                         <img
                           src={memo.sender_profile_image}

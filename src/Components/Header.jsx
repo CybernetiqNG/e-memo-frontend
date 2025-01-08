@@ -54,6 +54,7 @@ const Header = () => {
   }, []);
 
   const LogoutNow = async () => {
+    console.log("got here");
     Logout();
   };
 
@@ -169,7 +170,7 @@ const Header = () => {
                 </div>
 
                 {isOpen && (
-                  <div
+                  <a
                     className="absolute flex-col w-full space-y-1"
                     style={{ top: "110%", zIndex: "10" }}
                   >
@@ -188,7 +189,7 @@ const Header = () => {
                       <p className="">Log Out</p>
                       {/* <FaAngleDown className="ml-4" /> */}
                     </button>
-                  </div>
+                  </a>
                 )}
                 {isNotify && (
                   <div
@@ -364,7 +365,9 @@ const Header = () => {
                     <p
                       className="block text-sm"
                       onClick={() => {
-                        LogoutNow();
+                        {
+                          LogoutNow;
+                        }
                         setIsMobileMenuOpen(false); // Close the menu after logout
                       }}
                     >

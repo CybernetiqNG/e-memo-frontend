@@ -63,7 +63,7 @@ const Message = () => {
 
         if (fetchedMemo) {
           setMemo(fetchedMemo);
-          // console.log(fetchedMemo);
+          console.log(fetchedMemo);
           setMinutes(fetchedMemo.minutes);
 
           const mda = fetchedMemo.sender_mda_id;
@@ -138,6 +138,7 @@ const Message = () => {
   };
 
   const user = JSON.parse(localStorage.getItem("user"));
+  // console.log(user.name);
   let governor;
   if (user.role === "governor") {
     governor = true;
@@ -321,91 +322,93 @@ const Message = () => {
             </>
           )}
         </div>
-        <div className="lg:justify-items-end lg:flex lg:flex-row-reverse lg:gap-3 mt-7 w-full">
-          <div className="flex gap-3 w-full lg:w-96 lg:flex-row">
-            <button
-              className="bg-[#FF0000] py-4 w-1/2 lg:w-80 text-white rounded-md"
-              onClick={() => {
-                setIsApprove(false);
-                setIsConfirm(true);
-              }}
-            >
-              Disapprove
-            </button>
-            <div className="relative lg:w-full w-1/2">
+        {memo.recipient_name != user.name && (
+          <div className="lg:justify-items-end lg:flex lg:flex-row-reverse lg:gap-3 mt-7 w-full">
+            <div className="flex gap-3 w-full lg:w-96 lg:flex-row">
               <button
+                className="bg-[#FF0000] py-4 w-1/2 lg:w-80 text-white rounded-md"
                 onClick={() => {
-                  setIsOpen(!isOpen);
+                  setIsApprove(false);
+                  setIsConfirm(true);
                 }}
-                className="bg-[#74978B] py-4 w-full lg:w-40 text-white rounded-md flex items-center justify-center"
               >
-                More
-                <div>
-                  {isOpen ? (
-                    <FaAngleUp className="ml-7" />
-                  ) : (
-                    <FaAngleDown className="ml-7" />
-                  )}
-                </div>
+                Disapprove
               </button>
-              {isOpen && (
-                <>
-                  {governor ? (
-                    <div className="absolute -top-[136px] w-full flex-col gap-3">
-                      <button
-                        className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
-                        onClick={() => {
-                          openBudget(), setIsOpen(!isOpen);
-                        }}
-                      >
-                        View Budget
-                      </button>
-                      <button
-                        className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
-                        onClick={() => {
-                          openForward(), setIsOpen(!isOpen);
-                        }}
-                      >
-                        Forward
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="absolute -top-[68px] w-full flex-col gap-3">
-                      <button
-                        className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
-                        onClick={() => {
-                          openForward(), setIsOpen(!isOpen);
-                        }}
-                      >
-                        Forward
-                      </button>
-                    </div>
-                  )}
-                </>
-              )}
+              <div className="relative lg:w-full w-1/2">
+                <button
+                  onClick={() => {
+                    setIsOpen(!isOpen);
+                  }}
+                  className="bg-[#74978B] py-4 w-full lg:w-40 text-white rounded-md flex items-center justify-center"
+                >
+                  More
+                  <div>
+                    {isOpen ? (
+                      <FaAngleUp className="ml-7" />
+                    ) : (
+                      <FaAngleDown className="ml-7" />
+                    )}
+                  </div>
+                </button>
+                {isOpen && (
+                  <>
+                    {governor ? (
+                      <div className="absolute -top-[136px] w-full flex-col gap-3">
+                        <button
+                          className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
+                          onClick={() => {
+                            openBudget(), setIsOpen(!isOpen);
+                          }}
+                        >
+                          View Budget
+                        </button>
+                        <button
+                          className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
+                          onClick={() => {
+                            openForward(), setIsOpen(!isOpen);
+                          }}
+                        >
+                          Forward
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="absolute -top-[68px] w-full flex-col gap-3">
+                        <button
+                          className="bg-[#909090] py-4 w-full mb-3 lg:w-40 text-white rounded-md"
+                          onClick={() => {
+                            openForward(), setIsOpen(!isOpen);
+                          }}
+                        >
+                          Forward
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-3 w-full lg:w-auto lg:flex-row mt-3 lg:mt-0">
+              <button
+                className="bg-secondary py-4 w-1/2 lg:w-40 text-white rounded-md"
+                onClick={() => {
+                  setIsApprove(true);
+                  setIsConfirm(true);
+                }}
+              >
+                Approve
+              </button>
+
+              <button
+                className="bg-[#FFC700] py-4 w-1/2 lg:w-40 text-white rounded-md "
+                onClick={() => {
+                  openMinute(), setIsOpen(!isOpen);
+                }}
+              >
+                Minute
+              </button>
             </div>
           </div>
-          <div className="flex gap-3 w-full lg:w-auto lg:flex-row mt-3 lg:mt-0">
-            <button
-              className="bg-secondary py-4 w-1/2 lg:w-40 text-white rounded-md"
-              onClick={() => {
-                setIsApprove(true);
-                setIsConfirm(true);
-              }}
-            >
-              Approve
-            </button>
-
-            <button
-              className="bg-[#FFC700] py-4 w-1/2 lg:w-40 text-white rounded-md "
-              onClick={() => {
-                openMinute(), setIsOpen(!isOpen);
-              }}
-            >
-              Minute
-            </button>
-          </div>
-        </div>
+        )}
 
         {isMinute && (
           <div

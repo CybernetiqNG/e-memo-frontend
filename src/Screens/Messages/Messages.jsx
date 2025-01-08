@@ -10,9 +10,11 @@ import SentIcon from "../../assets/svg/icons/sent.svg";
 import FavouriteIcon from "../../assets/svg/icons/favourite.svg";
 import PendingIcon from "../../assets/svg/icons/pending.svg";
 import RejectedIcon from "../../assets/svg/icons/rejected.svg";
+import { IoMailUnreadSharp } from "react-icons/io5";
 
 // Import all components
 import Inbox from "./Inbox";
+import Unread from "./Unread";
 import Drafts from "./Drafts";
 import Approved from "./Approved";
 import Rejected from "./Rejected";
@@ -37,6 +39,7 @@ const Messages = () => {
 
   const items = [
     { id: "Inbox", icon: InboxIcon, label: "Inbox" },
+    { id: "Unread", icon: InboxIcon, label: "Unread" },
     { id: "Sent", icon: SentIcon, label: "Sent" },
     { id: "Draft", icon: DraftIcon, label: "Draft" },
     { id: "Approved", icon: ApprovedIcon, label: "Approved" },
@@ -50,6 +53,8 @@ const Messages = () => {
     switch (activeItem) {
       case "Inbox":
         return <Inbox />;
+      case "Unread":
+        return <Unread />;
       case "Draft":
         return <Drafts />;
       case "Approved":
@@ -106,11 +111,16 @@ const Messages = () => {
                         activeItem === item.id ? "bg-white" : "bg-primary"
                       }`}
                     >
-                      <img
-                        src={item.icon}
-                        className="w-5 h-5"
-                        alt={`${item.label} icon`}
-                      />
+                      {item.label === "Unread" ? (
+                        <IoMailUnreadSharp className="w-5 h-5" />
+                      ) : (
+                        <img
+                          src={item.icon}
+                          className="w-5 h-5"
+                          alt={`${item.label} icon`}
+                        />
+                      )}
+
                       <p className="ml-4 text-xl text-black">{item.label}</p>
                     </div>
                   </div>

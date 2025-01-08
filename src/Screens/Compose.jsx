@@ -53,7 +53,7 @@ const Compose = () => {
   const sign_data = `
   <div class="mt-[30px] font-medium ">
   <p class="mb-[10px] underline"> Signature </p>
-    <img src="${user.staff_signature}" alt="Staff_signature" class=" object-contain" />
+    <img src="${user.staff_signature}" alt="Staff_signature" class="h-20 object-contain" />
   </div>`;
 
   const handleCreate = async (choice) => {
@@ -127,15 +127,16 @@ const Compose = () => {
   };
 
   const handleSignature = async () => {
+    setSigning(true);
     try {
       const result = await Signature(user.email, password);
-      setSigning(true);
       // console.log(result);
       if (result === true) {
         setSigning(false);
         setSignature(true);
         closeSignature();
       } else {
+        setSigning(false);
         setErr("Wrong Password");
       }
     } catch (error) {
@@ -147,7 +148,7 @@ const Compose = () => {
 
   const fetchOptions = async () => {
     setLoading(true);
-    const fetchedOptions = await Recipient(); // Call your API
+    const fetchedOptions = await Recipient();
     setOptions(fetchedOptions);
     setLoading(false);
   };
@@ -323,7 +324,7 @@ const Compose = () => {
                     }}
                     className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-7 rounded-[7px] text-white hover:bg-primary ring-1 hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
                   >
-                    Create Memo
+                    Send Memo
                   </button>
                 )}
               </div>
