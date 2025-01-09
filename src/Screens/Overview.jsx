@@ -22,7 +22,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import allChat from "../Lib/AllChats";
-import Unviewed from "../Lib/ViewedMemo";
+import Unviewed from "../Lib/UnviewedMemo";
 import Disapproved from "../Lib/Disapproved";
 import AllApproved from "../Lib/Approved";
 
@@ -37,7 +37,7 @@ const Overview = () => {
   const [stat, setStat] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [unviewed, setUnviewed] = useState([]);
+  const [unviewed, setUnviewed] = useState(0);
   const [rejected, setRejected] = useState(0);
   const [approved, setApproved] = useState(0);
 
@@ -69,21 +69,21 @@ const Overview = () => {
         const fetchedDraft = await AllDrafts();
         setDrafts(fetchedDraft.length);
 
-        const fetchDisapproved = await Disapproved();
-        setRejected(fetchDisapproved.length);
+        const unviewed = await Unviewed();
+        setUnviewed(unviewed.length);
+        // console.log(unviewed);
 
         const fetchApproved = await AllApproved();
         setApproved(fetchApproved.length);
+
+        const fetchDisapproved = await Disapproved();
+        setRejected(fetchDisapproved.length);
 
         const fetchedArchived = await AllArchived();
         setArchived(fetchedArchived.length);
 
         const fetchedStarred = await AllStar();
         setStarred(fetchedStarred.length);
-
-        const unviewed = await Unviewed();
-        setUnviewed(unviewed);
-        // console.log(unviewed);
 
         const data = await allChat();
         // console.log(data);
@@ -179,6 +179,16 @@ const Overview = () => {
             </button>
             <button
               className="bg-[#f6f6f6] rounded-lg py-[14px] px-4 flex justify-between items-center w-full ring-1 ring-[#595959]"
+              onClick={() => handleItemClick("Unread")}
+            >
+              <p className="ml-2 text-xl font-normal text-black">Unread</p>
+
+              <div className="bg-[#FDAD00] rounded">
+                <p className="px-3 py-0.5 text-white">{unviewed}</p>
+              </div>
+            </button>
+            <button
+              className="bg-[#f6f6f6] rounded-lg py-[14px] px-4 flex justify-between items-center w-full ring-1 ring-[#595959]"
               onClick={() => handleItemClick("Draft")}
             >
               <p className="ml-2 text-xl font-normal text-black">Draft</p>
@@ -248,7 +258,7 @@ const Overview = () => {
                 <></>
               )} */}
               {memos.length > 0 ? (
-                memos.slice(-4).map((memo) => (
+                memos.slice(-5).map((memo) => (
                   <a href={`./message/${memo.id}`} key={memo.id}>
                     <div className="bg-white py-2 px-4 w-full ring-1 ring-[#00000030] rounded-[10px] mb-2">
                       <p className="font-medium text-[15px]">

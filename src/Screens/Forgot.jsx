@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import Login from "../assets/svg/login.svg";
 import Logo from "../assets/svg/logo.svg";
+import Logo2 from "../assets/svg/eMemo.svg";
 import Email from "../assets/svg/email.svg";
 import Password from "../assets/svg/password.svg";
 
@@ -144,14 +145,13 @@ const Forgot = () => {
       <div className="lg:grid lg:grid-cols-2 gap-20 px-10 lg:px-28">
         <div className="lg:block hidden">
           <div className="text-center ">
-            <img
-              src={Logo}
-              className="h-10 flex justify-center m-auto"
-              alt="Logo"
-            />
+            <div className="mr-4 block inline-flex cursor-pointer py-1.5 font-sans text-base font-medium leading-relaxed text-primary antialiased">
+              <img src={Logo2} className="h-[46px] pr-2" />
+              <img src={Logo} />
+            </div>
             <p className="text-base font-light mt-4">
-              Lorem ipsum dolor sit amet consectetur. Aliquam enim id leo a.
-              Etiam congue mauris pellentesque quam.
+              Efficient administration of internal memorandum and
+              correspondences in the public sector/government-to-government
             </p>
           </div>
           <img src={Login} alt="Login Illustration" className="mt-10" />

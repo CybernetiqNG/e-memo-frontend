@@ -14,7 +14,7 @@ const Pending = async () => {
 
       if (response.status === 200) {
         // console.log(response);
-        const data = response.data.starred_memos;
+        const data = response.data.pending_memos;
 
         return data;
       } else {

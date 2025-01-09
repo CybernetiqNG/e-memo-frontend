@@ -63,7 +63,7 @@ const Message = () => {
 
         if (fetchedMemo) {
           setMemo(fetchedMemo);
-          console.log(fetchedMemo);
+          // console.log(fetchedMemo);
           setMinutes(fetchedMemo.minutes);
 
           const mda = fetchedMemo.sender_mda_id;
@@ -82,7 +82,7 @@ const Message = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, confirmed]);
 
   const token = localStorage.getItem("token");
   const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -322,18 +322,39 @@ const Message = () => {
             </>
           )}
         </div>
-        {memo.recipient_name != user.name && (
+        {memo.sender_name != user.name && (
           <div className="lg:justify-items-end lg:flex lg:flex-row-reverse lg:gap-3 mt-7 w-full">
             <div className="flex gap-3 w-full lg:w-96 lg:flex-row">
-              <button
-                className="bg-[#FF0000] py-4 w-1/2 lg:w-80 text-white rounded-md"
-                onClick={() => {
-                  setIsApprove(false);
-                  setIsConfirm(true);
-                }}
-              >
-                Disapprove
-              </button>
+              {memo.approved === 0 ? (
+                <button
+                  className="bg-[#FF0000] py-4 w-1/2 lg:w-80 text-white rounded-md"
+                  onClick={() => {
+                    setIsApprove(false);
+                    setIsConfirm(true);
+                  }}
+                >
+                  Disapprove
+                </button>
+              ) : memo.approved === -1 ? (
+                <button
+                  className="bg-[#FF0000] py-4 w-1/2 lg:w-80 text-white rounded-md"
+                  disabled
+                >
+                  Disapproved!
+                </button>
+              ) : (
+                <button
+                  className="bg-red-300 py-4 w-1/2 lg:w-80 text-white rounded-md"
+                  onClick={() => {
+                    setIsApprove(false);
+                    setIsConfirm(true);
+                  }}
+                  disabled
+                >
+                  Disapprove
+                </button>
+              )}
+
               <div className="relative lg:w-full w-1/2">
                 <button
                   onClick={() => {
@@ -388,15 +409,34 @@ const Message = () => {
               </div>
             </div>
             <div className="flex gap-3 w-full lg:w-auto lg:flex-row mt-3 lg:mt-0">
-              <button
-                className="bg-secondary py-4 w-1/2 lg:w-40 text-white rounded-md"
-                onClick={() => {
-                  setIsApprove(true);
-                  setIsConfirm(true);
-                }}
-              >
-                Approve
-              </button>
+              {memo.approved === 0 ? (
+                <button
+                  className="bg-secondary py-4 w-1/2 lg:w-40 text-white rounded-md"
+                  onClick={() => {
+                    setIsApprove(true);
+                    setIsConfirm(true);
+                  }}
+                >
+                  Approve
+                </button>
+              ) : memo.approved === 1 ? (
+                <button
+                  className="bg-secondary py-4 w-1/2 lg:w-40 text-white rounded-md"
+                  disabled
+                >
+                  Approved!
+                </button>
+              ) : (
+                <button
+                  className="bg-[#65dcb4] py-4 w-1/2 lg:w-40 text-white rounded-md"
+                  onClick={() => {
+                    setIsApprove(true);
+                    setIsConfirm(true);
+                  }}
+                >
+                  Approve
+                </button>
+              )}
 
               <button
                 className="bg-[#FFC700] py-4 w-1/2 lg:w-40 text-white rounded-md "

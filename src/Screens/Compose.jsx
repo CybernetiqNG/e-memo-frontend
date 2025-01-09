@@ -273,18 +273,26 @@ const Compose = () => {
                   />
                 </div>
               </div>
-              {signature ? (
-                <div className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-5 rounded-[7px] text-white  ring-btn item-center ">
-                  Signed
-                </div>
-              ) : (
+              <div className="lg:grid grid-cols-2 gap-2">
+                {signature ? (
+                  <div className="text-center justify-center flex items-center w-full bg-secondary p-5 rounded-[7px] text-white  ring-btn item-center ">
+                    Signed
+                  </div>
+                ) : (
+                  <button
+                    onClick={openSignature}
+                    className="text-center justify-center flex items-center w-full bg-secondary p-5 rounded-[7px] text-white hover:bg-primary hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
+                  >
+                    Add Signature
+                  </button>
+                )}
                 <button
                   onClick={openSignature}
-                  className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-5 rounded-[7px] text-white hover:bg-primary hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
+                  className="text-center justify-center flex items-center w-full bg-secondary p-5 rounded-[7px] text-white hover:bg-primary hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
                 >
-                  Add Signature
+                  Add Attachment
                 </button>
-              )}
+              </div>
 
               {error && <p className="text-red-500 mt-5 -mb-5">{error}</p>}
               <div className="lg:grid grid-cols-2 gap-2 pt-10 space-y-3 lg:space-y-0">
@@ -322,7 +330,7 @@ const Compose = () => {
                       await handleCreate("send-memo");
                       setLoadingMemo(false);
                     }}
-                    className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-7 rounded-[7px] text-white hover:bg-primary ring-1 hover:ring-2 hover:text-btn ring-btn item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
+                    className="text-center col-span-2 justify-center flex items-center w-full bg-secondary p-7 rounded-[7px] text-white hover:bg-primary ring-1 hover:ring-2 hover:text-seccondary ring-secondary item-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-102"
                   >
                     Send Memo
                   </button>

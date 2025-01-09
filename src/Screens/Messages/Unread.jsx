@@ -1,8 +1,8 @@
-import allUnread from "../../Lib/Unread";
+import Unviewed from "../../Lib/UnviewedMemo";
 import MemoList from "../../Components/MemoList";
 
 const Unread = () => {
-  return <MemoList fetchMemos={allUnread} pageTitle="Unread Memos" />;
+  return <MemoList fetchMemos={Unviewed} pageTitle="Unread Memos" />;
 };
 
 export default Unread;

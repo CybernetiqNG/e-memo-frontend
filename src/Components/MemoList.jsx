@@ -14,7 +14,7 @@ import formatDate from "../Utils/formatDate";
 import StarMemo from "../Lib/StarMemo";
 import ArchiveMemo from "../Lib/ArchiveMemo";
 import axios from "axios";
-import Unviewed from "../Lib/ViewedMemo";
+import Unviewed from "../Lib/UnviewedMemo";
 
 const MemoList = ({ fetchMemos, pageTitle, starred, archived }) => {
   const [memos, setMemos] = useState([]);
@@ -61,7 +61,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred, archived }) => {
           memo.memo_subject.toLowerCase().includes(searchQuery.toLowerCase())
       );
     setFilteredMemos(result);
-    // console.log(filteredMemos);
+    console.log(filteredMemos);
   }, [searchQuery, memos]);
 
   const handleSearch = (e) => {
@@ -133,7 +133,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred, archived }) => {
   const token = localStorage.getItem("token");
 
   const handleView = async (id) => {
-    if (pageTitle === "Inbox Memos") {
+    if (pageTitle === "Inbox Memos" || "Unread Memos") {
       try {
         const response = await axios.post(
           `${baseUrl}/memo/view-memo`,
@@ -148,7 +148,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred, archived }) => {
           }
         );
 
-        // console.log("===========Got here=========");
+        console.log("===========Got here=========");
         navigate(`/message/${id}`);
       } catch (err) {
         console.error("Error while viewing memo:", err);
@@ -180,7 +180,38 @@ const MemoList = ({ fetchMemos, pageTitle, starred, archived }) => {
             }}
             title="Refresh"
           />
-          {options ? (
+          <div
+            onClick={() => {
+              {
+                handleBulkArchive();
+              }
+            }}
+            className="w-6 h-6 cursor-pointer"
+            title="Archive Memo"
+          >
+            {pageTitle === "Archived Memos" ? (
+              <MdOutlineUnarchive className="w-6 h-6" />
+            ) : (
+              <img src={Archive} className="w-6 h-6" />
+            )}
+          </div>
+
+          <div
+            onClick={() => {
+              {
+                handleBulkStar();
+              }
+            }}
+            className="w-6 h-6 cursor-pointer"
+            title="Add to favorite"
+          >
+            {pageTitle === "Starred Memos" ? (
+              <img src={Star} className="w-5 h-5  mt-0.5" />
+            ) : (
+              <img src={Star2} className="w-5 h-5  mt-0.5" />
+            )}
+          </div>
+          {/* {options ? (
             <>
               <BsThreeDotsVertical
                 onClick={() => {
@@ -189,38 +220,6 @@ const MemoList = ({ fetchMemos, pageTitle, starred, archived }) => {
                 className="w-6 h-6 cursor-pointer"
                 title="Expand"
               />
-
-              <div
-                onClick={() => {
-                  {
-                    handleBulkArchive();
-                  }
-                }}
-                className="w-6 h-6 cursor-pointer"
-                title="Archive Memo"
-              >
-                {pageTitle === "Archived Memos" ? (
-                  <MdOutlineUnarchive className="w-6 h-6" />
-                ) : (
-                  <img src={Archive} className="w-6 h-6" />
-                )}
-              </div>
-
-              <div
-                onClick={() => {
-                  {
-                    handleBulkStar();
-                  }
-                }}
-                className="w-6 h-6 cursor-pointer"
-                title="Add to favorite"
-              >
-                {pageTitle === "Starred Memos" ? (
-                  <img src={Star} className="w-5 h-5  mt-0.5" />
-                ) : (
-                  <img src={Star2} className="w-5 h-5  mt-0.5" />
-                )}
-              </div>
             </>
           ) : (
             <img
@@ -231,7 +230,7 @@ const MemoList = ({ fetchMemos, pageTitle, starred, archived }) => {
               className="w-6 h-6 cursor-pointer"
               title="Close"
             />
-          )}
+          )} */}
         </div>
         <div className="inline-flex items-center">
           <img src={Search} className="w-[18px] h-[18px] mr-2" />
@@ -291,18 +290,20 @@ const MemoList = ({ fetchMemos, pageTitle, starred, archived }) => {
                       type="checkbox"
                       className="col-span-1 w-5 h-5 mr-5 bg-primary border-[0.7px] rounded-[1.7px] border-black checked:bg-secondary checked:border-black appearance-none"
                       checked={selectedMemos.includes(memo.id)}
-                      onChange={() => {
-                        handleCheckboxChange(memo.id), e.stopPropagation();
-                        e.preventDefault();
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent the click event from propagating to the parent
+                      }}
+                      onChange={(e) => {
+                        handleCheckboxChange(memo.id);
                       }}
                     />
+
                     {/* {console.log(memo.starred)} */}
                     <img
                       src={starred || memo.starred ? Star2 : Star}
-                      className="w-4 h-4 col-sapn-1"
+                      className="w-4 h-4 col-sapn-1 cursor-pointer"
                       onClick={(e) => {
-                        handleStar(memo.id, memo.starred), e.stopPropagation();
-                        e.preventDefault();
+                        e.stopPropagation(), handleStar(memo.id, memo.starred);
                       }}
                     />
                     <div
@@ -339,7 +340,11 @@ const MemoList = ({ fetchMemos, pageTitle, starred, archived }) => {
                     {memo.memo_subject}
                   </p>
                   <p className="ml-5 message-text text-right">
-                    {formatDate(memo.date_sent)}
+                    {memo?.date_sent ? (
+                      formatDate(memo.date_sent)
+                    ) : (
+                      <p className="ml-5 message-text text-right">No date </p>
+                    )}
                   </p>
                 </div>
               </div>

@@ -87,7 +87,7 @@ const SignIn = () => {
             <img src={Logo} className="h-10" alt="Logo" />
           </div>
 
-          <p className="text-xl font-normal">Hi, welcome back!</p>
+          <p className="text-xl font-normal text-right">Hi, welcome!</p>
           <p className="mt-4 font-bold text-5xl">Sign In</p>
 
           <div className="pt-7 ">

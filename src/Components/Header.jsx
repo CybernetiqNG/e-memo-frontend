@@ -9,7 +9,7 @@ import { FaAngleDown, FaAngleUp, FaBell } from "react-icons/fa6";
 import Logout from "../Lib/LogOut";
 import Bg from "../assets/svg/profilebg.svg";
 import Camera from "../assets/svg/camera.svg";
-import Unviewed from "../Lib/ViewedMemo";
+import Unviewed from "../Lib/UnviewedMemo";
 
 const Header = () => {
   const profileRef = useRef(null);
@@ -59,43 +59,16 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(event.target) &&
-        notifyRef.current &&
-        !notifyRef.current.contains(event.target)
-      ) {
-        setIsOpen(false);
-        setIsNotify(false);
-      } else if (
-        profileRef.current &&
-        !profileRef.current.contains(event.target)
-      ) {
-        setIsOpen(false);
-      } else if (
-        notifyRef.current &&
-        !notifyRef.current.contains(event.target)
-      ) {
-        setIsNotify(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
     const fetchData = async () => {
-      // console.log(fetchedMemos);
       const unviewed = await Unviewed();
-      // console.log(unviewed);
       setNotification(unviewed);
     };
 
-    fetchData();
+    const intervalId = setInterval(fetchData, 3000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   const groupedNotifications = notification.reduce((acc, memo) => {
@@ -111,6 +84,23 @@ const Header = () => {
   const handleItemClick = (activeItem) => {
     navigate("/messages", { state: { activeItem } });
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifyRef.current && !notifyRef.current.contains(event.target)) {
+        setIsNotify(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -173,24 +163,26 @@ const Header = () => {
                   <a
                     className="absolute flex-col w-full space-y-1"
                     style={{ top: "110%", zIndex: "10" }}
+                    ref={profileRef}
                   >
                     <a
-                      className="flex justify-between items-center left-0 bg-white ring-1 ring-secondary text-center py-2 px-6 rounded-md text-black cursor-pointer h-[53px] w-full "
+                      className="flex justify-between items-center left-0 bg-white ring-1 ring-secondary text-center py-2 px-6 rounded-md text-black cursor-pointer h-[53px] w-full"
                       href="./profile"
                     >
-                      <p className="">Profile</p>
+                      <p>Profile</p>
                     </a>
                     <button
-                      className="flex justify-between items-center left-0 bg-white ring-1 ring-secondary text-center py-2 px-6 rounded-md text-black cursor-pointer h-[53px] w-full "
+                      className="flex justify-between items-center left-0 bg-white ring-1 ring-secondary text-center py-2 px-6 rounded-md text-black cursor-pointer h-[53px] w-full"
                       onClick={() => {
                         LogoutNow();
+                        setIsOpen(false);
                       }}
                     >
-                      <p className="">Log Out</p>
-                      {/* <FaAngleDown className="ml-4" /> */}
+                      <p>Log Out</p>
                     </button>
                   </a>
                 )}
+
                 {isNotify && (
                   <div
                     className="absolute flex-col w-[120%]    "
@@ -205,6 +197,7 @@ const Header = () => {
                             className="border-b border-secondary border-1 pb-1"
                             onClick={() => {
                               handleItemClick();
+                              setIsNotify(false);
                             }}
                           >
                             You have{" "}
@@ -259,7 +252,6 @@ const Header = () => {
               <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 {/* Conditional rendering of icon */}
                 {isMobileMenuOpen ? (
-                  // Close icon when mobile menu is open
                   <svg
                     width="24"
                     height="24"
@@ -341,7 +333,7 @@ const Header = () => {
                       Chat
                     </Link>
                   </li>
-                  <li className="py-2 px-4 text-secondary">
+                  {/* <li className="py-2 px-4 text-secondary">
                     <Link
                       to="./notifications"
                       className="block text-sm"
@@ -349,7 +341,7 @@ const Header = () => {
                     >
                       Notifications
                     </Link>
-                  </li>
+                  </li> */}
                   <li className="py-2 px-4 text-secondary">
                     <Link
                       to="./help"
@@ -366,7 +358,7 @@ const Header = () => {
                       className="block text-sm"
                       onClick={() => {
                         {
-                          LogoutNow;
+                          LogoutNow();
                         }
                         setIsMobileMenuOpen(false); // Close the menu after logout
                       }}
