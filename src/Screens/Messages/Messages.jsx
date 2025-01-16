@@ -5,7 +5,7 @@ import EmailIcon from "../../assets/svg/email.svg";
 import ApprovedIcon from "../../assets/svg/icons/approved.svg";
 import ArchiveIcon from "../../assets/svg/icons/archive2.svg";
 import DraftIcon from "../../assets/svg/icons/draft.svg";
-import InboxIcon from "../../assets/svg/icons/Inbox.svg";
+import InboxIcon from "../../assets/svg/icons/inbox.svg";
 import SentIcon from "../../assets/svg/icons/sent.svg";
 import FavouriteIcon from "../../assets/svg/icons/favourite.svg";
 import PendingIcon from "../../assets/svg/icons/pending.svg";
