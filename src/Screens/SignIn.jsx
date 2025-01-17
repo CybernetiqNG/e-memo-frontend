@@ -5,6 +5,7 @@ import Logo from "../assets/svg/logo.svg";
 import Logo2 from "../assets/svg/eMemo.svg";
 import Email from "../assets/svg/email.svg";
 import Password from "../assets/svg/password.svg";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,8 @@ const SignIn = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const baseUrl = import.meta.env.VITE_BASE_URL;
+
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (email === "") {
@@ -34,7 +37,8 @@ const SignIn = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
-        window.location.href = "/overview";
+        // window.location.href = "/overview";
+        navigate("/overview");
       } else {
         setLoading(false);
         setError(response.message);
