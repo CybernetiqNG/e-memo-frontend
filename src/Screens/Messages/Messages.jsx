@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom"; // Import useLocation
+import { useLocation, useNavigate } from "react-router-dom"; // Import useLocation
 import SideBar from "../../Components/SideBar";
 import EmailIcon from "../../assets/svg/email.svg";
 import ApprovedIcon from "../../assets/svg/icons/approved.svg";
@@ -27,7 +27,8 @@ import WaterMark from "../../Components/WaterMark";
 import MobileWarning from "../../Components/MobileWarning";
 
 const Messages = () => {
-  auth();
+  auth({ navigate });
+  const navigate = useNavigate();
   const location = useLocation(); // Hook to access the location state
   const [activeItem, setActiveItem] = useState("Inbox"); // Set default active item
 

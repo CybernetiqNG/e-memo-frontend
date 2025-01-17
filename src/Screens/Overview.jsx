@@ -27,7 +27,7 @@ import Disapproved from "../Lib/Disapproved";
 import AllApproved from "../Lib/Approved";
 
 const Overview = () => {
-  auth();
+  auth({ navigate });
   const navigate = useNavigate();
   const [inbox, setInbox] = useState(0);
   const [drafts, setDrafts] = useState(0);

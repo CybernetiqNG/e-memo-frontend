@@ -5,9 +5,11 @@ import Error from "../assets/svg/icons/error.svg";
 import Warning from "../assets/svg/icons/warning.svg";
 import auth from "../Utils/auth";
 import WaterMark from "../Components/WaterMark";
+import { useNavigate } from "react-router-dom";
 
 const Notification = () => {
-  auth();
+  auth({ navigate });
+  const navigate = useNavigate();
   return (
     <div className="lg:grid grid-cols-12 ">
       <SideBar />

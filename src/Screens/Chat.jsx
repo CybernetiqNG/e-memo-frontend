@@ -16,9 +16,10 @@ import Skeleton from "react-loading-skeleton";
 import { BsChatFill } from "react-icons/bs";
 import auth from "../Utils/auth";
 import debounce from "lodash/debounce";
+import { useNavigate } from "react-router-dom";
 
 const Chat = () => {
-  auth();
+  auth({ navigate });
   const [chats, setChats] = useState([]);
   const [id, setId] = useState();
   const [messages, setMessages] = useState([]);
@@ -30,6 +31,8 @@ const Chat = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredChats, setFilteredChats] = useState([]);
+
+  const navigate = useNavigate();
 
   const user = JSON?.parse(localStorage?.getItem("user"));
   const userId = user?.id;

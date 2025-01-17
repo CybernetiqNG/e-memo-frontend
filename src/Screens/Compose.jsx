@@ -11,9 +11,10 @@ import Recipient from "../Lib/Recipient";
 import debounce from "lodash/debounce";
 import Signature from "../Lib/Signature";
 import Back from "../assets/svg/icons/back.svg";
+import { useNavigate } from "react-router-dom";
 
 const Compose = () => {
-  auth();
+  auth({ navigate });
 
   const [preview, showPreview] = useState(false);
 
@@ -46,6 +47,7 @@ const Compose = () => {
   const [err, setErr] = useState("");
 
   const date = todayDate();
+  const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
@@ -100,7 +102,8 @@ const Compose = () => {
       // console.log(response.status);
       const id = response.data.memo.id;
       if (response.status === 201) {
-        window.location.href = `/message/${id}`;
+        // window.location.href = `/message/${id}`;
+        navigate(`/message/${id}`);
       } else {
         setLoadingDraft(false);
         setLoadingMemo(false);
