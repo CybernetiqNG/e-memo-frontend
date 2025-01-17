@@ -20,7 +20,7 @@ import Recipient from "../../Lib/Recipient";
 import Approve from "../../Lib/Approve";
 
 const Message = () => {
-  auth();
+  auth({ navigate });
   const navigate = useNavigate();
   const { id } = useParams();
   const [memo, setMemo] = useState([]);
@@ -195,7 +195,8 @@ const Message = () => {
       // console.log(id, "dcejhcej");
       if (response.status === 201) {
         // console.log("got here");
-        window.location.href = `/message/${id}`;
+        // window.location.href = `/message/${id}`;
+        navigate(`/message/${id}`);
         setNote("Forwarded Succressfully");
       } else {
         setSending(false);

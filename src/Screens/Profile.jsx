@@ -7,9 +7,12 @@ import Logo from "../assets/svg/logo2.svg";
 import auth from "../Utils/auth";
 import WaterMark from "../Components/WaterMark";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  auth();
+  auth({ navigate });
+
+  const navigate = useNavigate();
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [user, setUser] = useState(

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const Logout = async () => {
+const Logout = async ({ navigate }) => {
   const token = localStorage.getItem("token");
   const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -23,7 +23,8 @@ const Logout = async () => {
         localStorage.removeItem("user");
         localStorage.removeItem("chatdata");
 
-        window.location.href = "/sign-in";
+        // window.location.href = "/sign-in";
+        navigate("/sign-in");
       } else {
         // console.log("Error logging out:", response.message);
       }

@@ -3,9 +3,11 @@ import SideBar from "../Components/SideBar";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa6"; // Import both icons
 import auth from "../Utils/auth";
 import WaterMark from "../Components/WaterMark";
+import { useNavigate } from "react-router-dom";
 
 const Help = () => {
-  auth();
+  auth({ navigate });
+  const navigate = useNavigate();
   const [openIndex, setOpenIndex] = useState(null);
   const faqs = [
     {
