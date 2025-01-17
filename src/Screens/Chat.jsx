@@ -8,7 +8,7 @@ import Star2 from "../assets/svg/under2.svg";
 import Person from "../assets/svg/logo2.svg";
 import { IoMdArrowBack } from "react-icons/io";
 import { HiPaperAirplane } from "react-icons/hi2";
-import allChat from "../Lib/AllChats";
+import AllChat from "../Lib/AllChats";
 import formatDate from "../Utils/formatDate";
 import chat from "../Lib/Chat";
 import sendChat from "../Lib/SendChat";
@@ -42,7 +42,7 @@ const Chat = () => {
       // console.log(chatList);
       setChats(chatList);
     } else {
-      const data = await allChat();
+      const data = await AllChat();
       setChats(data);
       // console.log(data);
       localStorage.setItem("chatdata", JSON.stringify(data));

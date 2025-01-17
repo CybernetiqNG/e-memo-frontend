@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const allChat = async () => {
+const AllChat = async () => {
   const token = localStorage.getItem("token");
   const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -31,4 +31,4 @@ const allChat = async () => {
   }
 };
 
-export default allChat;
+export default AllChat;

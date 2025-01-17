@@ -21,7 +21,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import allChat from "../Lib/AllChats";
+import AllChat from "../Lib/AllChats";
 import Unviewed from "../Lib/UnviewedMemo";
 import Disapproved from "../Lib/Disapproved";
 import AllApproved from "../Lib/Approved";
@@ -85,7 +85,7 @@ const Overview = () => {
         const fetchedStarred = await AllStar();
         setStarred(fetchedStarred.length);
 
-        const data = await allChat();
+        const data = await AllChat();
         // console.log(data);
         localStorage.setItem("chatdata", JSON.stringify(data));
       } catch (error) {
