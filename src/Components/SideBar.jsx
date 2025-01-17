@@ -30,7 +30,7 @@ const SideBar = () => {
   };
 
   const LogoutNow = async () => {
-    Logout();
+    Logout(navigate);
   };
 
   const navigate = useNavigate();
